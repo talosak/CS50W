@@ -1,0 +1,32 @@
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.main-containter {
+    display: flex;
+    justify-content: center;
+    height: 90vh;
+}
+
+.btn-google {
+    background-color: #333333;
+    border: #232323 2px solid;
+}
+
+.btn-google:hover {
+    background-color: #333333;
+    border: #888888 2px solid;
+}
+
+.google-search {
+    border: none;
+    background-color: #555555;
+}
+
+.google-search:hover {
+    background-color: #6d6d6d;
+}
+
+.google-search:focus {
+    background-color: #6d6d6d !important;
+}
