@@ -30,3 +30,11 @@
 .google-search:focus {
     background-color: #6d6d6d !important;
 }
+
+.image-text {
+    font-size: 16px;
+    color: #4487f6;
+    position: relative;
+    left: 107px;
+    bottom: 25px;
+}
