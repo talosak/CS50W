@@ -38,3 +38,30 @@
     left: 107px;
     bottom: 25px;
 }
+
+.advanced-header {
+    color: #f28b82;
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.advanced-row {
+    color: #969ba1;
+    font-size: 14px;
+    padding: 10px;
+}
+
+.advanced-input:focus {
+    outline: solid 1px #4487f6;
+}
+
+.advanced-submit {
+    height: 30px;
+    width: 170px;
+    background-color: #8ab4f8;
+    border: #8ab4f8 solid 2px;
+    color: #202124;
+    padding:3px;
+    font-weight: bold;
+    border-radius:3px;
+}

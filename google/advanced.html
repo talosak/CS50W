@@ -14,8 +14,39 @@
                 <li class="nav-item"><a href="index.html" class="text-end nav-link">Google Search</a></li>
             </ul>
         </nav>
-        <main class="container text-center py-5 m-auto">
-            <!-- TODO -->
-        </main>
+        <div class="container" style="position:absolute;left:0.1%;">
+            <header class="container advanced-header">
+                Advanced Search
+            </header>
+            <main class="container text-left py-5 m-auto">
+                <form class="form-group" action="https://www.google.com/search" name="f">
+                    <div style="padding-bottom:20px;">Find pages with...</div>
+                    <div class="d-table" style="border-spacing: 20px; width:100%">
+                        <div class="d-table-row advanced-row">
+                            <div class="d-table-cell" style="width:17%">all these words:</div>
+                            <div class="d-table-cell" style="width:83%"><input class="bg-dark text-light border border-secondary advanced-input w-100" type="text" name="as_q"></div>
+                        </div>
+                        <div class="d-table-row advanced-row">
+                            <div class="d-table-cell">this exact word or phrase:</div>
+                            <div class="d-table-cell"><input class="bg-dark text-light border border-secondary advanced-input w-100" type="text" name="as_epq"></div>
+                        </div>
+                        <div class="d-table-row advanced-row">
+                            <div class="d-table-cell">any of these words:</div>
+                            <div class="d-table-cell"><input class="bg-dark text-light border border-secondary advanced-input w-100" type="text" name="as_oq"></div>
+                        </div>
+                        <div class="d-table-row advanced-row">
+                            <div class="d-table-cell">none of these words:</div>
+                            <div class="d-table-cell"><input class="bg-dark text-light border border-secondary advanced-input w-100" type="text" name="as_eq"></div>
+                        </div>
+                        <div class="d-table-row advanced-row">
+                            <div class="d-table-cell"></div>
+                            <div class="d-table-cell text-end">
+                                <input type="submit" class="advanced-submit" value="Advanced Search">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </main>
+        </div>
     </body>
 </html>
