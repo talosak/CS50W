@@ -9,26 +9,29 @@
 }
 
 .btn-google {
-    background-color: #333333;
-    border: #232323 2px solid;
+    background-color: #fafafa;
+    border: #ededed 1px solid;
 }
 
 .btn-google:hover {
-    background-color: #333333;
-    border: #888888 2px solid;
+    background-color: #fafafa;
+    border: #cdcdcd 1px solid;
 }
 
 .google-search {
-    border: none;
-    background-color: #555555;
+    border: #dddddd 2px solid;
+    background-color: #ffffff;
 }
 
 .google-search:hover {
-    background-color: #6d6d6d;
+    background-color: #ffffff;
+    border: #dddddd 1px solid;
 }
 
 .google-search:focus {
-    background-color: #6d6d6d !important;
+    background-color: #ffffff;
+    outline: none;
+    border: #dddddd 1px solid;
 }
 
 .image-text {
@@ -58,9 +61,9 @@
 .advanced-submit {
     height: 30px;
     width: 170px;
-    background-color: #8ab4f8;
-    border: #8ab4f8 solid 2px;
-    color: #202124;
+    background-color: #3079ed;
+    border: #3079ed solid 2px;
+    color: #ffffff;
     padding:3px;
     font-weight: bold;
     border-radius:3px;
