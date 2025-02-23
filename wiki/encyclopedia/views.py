@@ -36,3 +36,18 @@ def search(request):
             "query": query,
             "results": results,
         })
+
+def create(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+        for entry in util.list_entries():
+            if title == entry:
+                return render(request, "encyclopedia/createInvalid.html")
+        util.save_entry(title, content)
+        return render(request, "encyclopedia/entry.html", {
+            "title": title,
+            "content": markdown2.markdown(util.get_entry(title)),
+        })
+    else:
+        return render(request, "encyclopedia/create.html")
