@@ -1,3 +1,3 @@
 # Cat
 
-Cat is an animal that goes "meow"
+A cat is an animal that goes "meow"

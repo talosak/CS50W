@@ -9,7 +9,9 @@
     <div class="containter">
         <form action="{% url 'create' %}" method="POST">
             {% csrf_token %}
+            <label for="title">Title:</label>
             <input type="text" style="font-size: 20px;" class="form-control search" name="title" placeholder="Enter title"><br>
+            <label for="content">Content:</label>
             <textarea style="height: 70vh;" name="content" class="form-control textarea" placeholder="Enter markdown content"></textarea><br>
             <input class="btn btn-primary" type="submit">
         </form>

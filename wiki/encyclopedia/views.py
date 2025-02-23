@@ -45,9 +45,21 @@ def create(request):
             if title == entry:
                 return render(request, "encyclopedia/createInvalid.html")
         util.save_entry(title, content)
-        return render(request, "encyclopedia/entry.html", {
-            "title": title,
-            "content": markdown2.markdown(util.get_entry(title)),
-        })
+        return redirect("entry", title)
     else:
         return render(request, "encyclopedia/create.html")
+    
+def edit(request, title):
+    if request.method == "POST":
+        newContent = request.POST.get("content")
+        if util.get_entry(title) == None:
+            return render(request, "encyclopedia/editInvalid.html")
+        util.save_entry(title, newContent)
+        return redirect("entry", title)    
+    else:
+        if util.get_entry(title) == None:
+            return render(request, "encyclopedia/editInvalid.html")
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "oldContent": util.get_entry(title),
+        })

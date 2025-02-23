@@ -1,0 +1,19 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Edit
+{% endblock %}
+
+{% block body %}
+    <h1>Edit the entry: {{ title }}</h1>
+    <div class="containter">
+        <form action="{% url 'edit' title=title %}" method="POST">
+            {% csrf_token %}
+            <label for="title">Title:</label>
+            <input type="text" style="font-size: 20px;" class="form-control search" name="title" value="{{ title }}" readonly><br>
+            <label for="content">Content:</label>
+            <textarea style="height: 70vh;" name="content" class="form-control textarea">{{ oldContent }}</textarea><br>
+            <input class="btn btn-primary" type="submit" value="Confirm changes">
+        </form>
+    </div>
+{% endblock %}
