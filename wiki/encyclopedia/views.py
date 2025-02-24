@@ -2,6 +2,7 @@ import django
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from random import choice
 
 from . import util
 import markdown2
@@ -63,3 +64,7 @@ def edit(request, title):
             "title": title,
             "oldContent": util.get_entry(title),
         })
+
+def random(request):
+    title = choice(util.list_entries())
+    return redirect("entry", title)
