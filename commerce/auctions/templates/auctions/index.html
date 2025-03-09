@@ -11,7 +11,8 @@
             <img src="{{listing.image}}" style="max-width:90vw;max-height:20vh"><br>
             {{listing.description}}
             <h3>Current Price: {{listing.amount}}</h3>
-            {{listing.bidCount}} bid(s) so far.
+            {{listing.bidCount}} bid(s) so far. <br><br>
+            <a class="btn btn-primary" href="{% url 'listing' listing_id=listing.id %}">Go To Listing</a>
         </div>                
         <br>
     {% endfor %}

@@ -9,7 +9,6 @@ from .models import User, Bid, Listing, Comment
 
 
 def index(request):
-    # bids__bidder where "bids__amount"==Max("bids__amount")
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.annotate(amount=Max("bids__amount"), bidCount=Count("bids")-1),
     })
@@ -84,3 +83,9 @@ def create(request):
         return redirect("index")
     else:
         return render(request, "auctions/create.html")
+    
+def listing(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    return render(request, "auctions/listing.html", {
+        "listing": listing,
+    })
