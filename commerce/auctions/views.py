@@ -3,12 +3,16 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.db.models import Max, Count
 
 from .models import User, Bid, Listing, Comment
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    # bids__bidder where "bids__amount"==Max("bids__amount")
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.annotate(amount=Max("bids__amount"), bidCount=Count("bids")-1),
+    })
 
 
 def login_view(request):
