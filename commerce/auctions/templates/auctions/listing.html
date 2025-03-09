@@ -1,5 +1,26 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h1>Listing Page for {{listing.title}}</h1>
+    <h1>Listing Page for {{listing.title}}</h1><br><br>
+
+    <div class="container-fluid">
+        <h3><strong>Listing: {{listing.title}}</strong></h3>
+        <img src="{{listing.image}}" style="max-width:90vw;height:40vh;"><br>
+        {{listing.description}}
+        <h3>Current Price: ${{bid.amount}}</h3>
+        {{bidCount}} bid(s) so far. Current bid belongs to {{bid.bidder}}.<br><br>
+        <form action="{% url 'listing' listing_id=listing.id %}" method="post">
+            {% csrf_token %}
+            <input type="number" placeholder="Bid" class="form-control" name="bid"><br>
+            <input type="submit" class="btn btn-primary" value="Place Bid">
+        </form>
+        <br>
+        <h4>Details</h4>
+        <ul>
+            <li>Listed by: {{listing.creator}}</li>
+            <li>Category: {{listing.category}}</li>
+            <li>Date of creation: {{listing.creationTime}}</li>
+        </ul>
+    </div>                
+    <br>
 {% endblock %}

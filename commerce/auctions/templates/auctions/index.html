@@ -7,12 +7,18 @@
         <div class="border border-dark"></div>
         <br>
         <div class="container-fluid">
-            <h3><strong>Listing: {{listing.title}}</strong></h3>
-            <img src="{{listing.image}}" style="max-width:90vw;max-height:20vh"><br>
-            {{listing.description}}
-            <h3>Current Price: {{listing.amount}}</h3>
-            {{listing.bidCount}} bid(s) so far. <br><br>
-            <a class="btn btn-primary" href="{% url 'listing' listing_id=listing.id %}">Go To Listing</a>
+            <div class="row">
+                <div>
+                    <img src="{{listing.image}}" width="700" height="350" style="object-fit:contain;">
+                </div>
+                <div>
+                    <a href="{% url 'listing' listing_id=listing.id %}" style="color: black;"><h3><strong>{{listing.title}}</strong></h3></a><br>
+                    {{listing.description}}
+                    <br><br>
+                    <h3>Price: ${{listing.amount}}</h3><br>
+                    Created {{listing.creationTime}}
+                </div>
+            </div>
         </div>                
         <br>
     {% endfor %}

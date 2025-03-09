@@ -4,6 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.db.models import Max, Count
+from datetime import datetime
 
 from .models import User, Bid, Listing, Comment
 
@@ -72,12 +73,13 @@ def create(request):
         startingBid = request.POST["starting-bid"]
         imageLink = request.POST["image-link"]
         category = request.POST["category"]
+        creationTime = datetime.now().strftime("on %x at %X")
         if title == None or description == None or startingBid == None:
             return render(request, "auctions/register.html", {
                 "message": "Please fill out all non-optional fields."
             })
-        listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user)
-        bid = Bid(bidder=request.user, listing=listing, amount=startingBid)
+        listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user, creationTime=creationTime)
+        bid = Bid(bidder=request.user, listing=listing, amount=startingBid, creationTime=creationTime)
         listing.save()
         bid.save()
         return redirect("index")
@@ -86,6 +88,24 @@ def create(request):
     
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-    return render(request, "auctions/listing.html", {
-        "listing": listing,
-    })
+    highestAmount = Bid.objects.filter(listing=listing).aggregate(Max("amount"))
+    bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).get()
+    if request.method == "POST":
+        amount = request.POST["bid"]
+        if amount == None or not amount.isnumeric():
+            return render(request, "auctions/listing.html", {
+                "message": "Please fill out the bid field with a positive integer."
+            })
+        if bid.amount >= int(amount):
+            return render(request, "auctions/listing.html", {
+                "message": "Bid has to excede the price."
+            })
+        newBid = Bid(bidder=request.user, listing=listing, amount=amount, creationTime=datetime.now().strftime("on %x at %X"))
+        newBid.save()
+        return redirect("index")
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "bid": bid,
+            "bidCount": Bid.objects.filter(listing=listing).count() - 1
+        })
