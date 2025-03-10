@@ -78,7 +78,7 @@ def create(request):
             return render(request, "auctions/register.html", {
                 "message": "Please fill out all non-optional fields."
             })
-        listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user, creationTime=creationTime)
+        listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user, creationTime=creationTime, isActive=True)
         bid = Bid(bidder=request.user, listing=listing, amount=startingBid, creationTime=creationTime)
         listing.save()
         bid.save()
@@ -90,7 +90,11 @@ def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     highestAmount = Bid.objects.filter(listing=listing).aggregate(Max("amount"))
     bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).get()
-    if request.method == "POST":
+    if request.method == "POST" and request.POST["formType"] == "formWatchlist":
+        listing.watchers.add(request.user)
+        listing.save()
+        return redirect("listing")
+    elif request.method == "POST":
         amount = request.POST["bid"]
         if amount == None or not amount.isnumeric():
             return render(request, "auctions/listing.html", {

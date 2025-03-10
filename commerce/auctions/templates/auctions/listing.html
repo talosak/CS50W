@@ -3,8 +3,17 @@
 {% block body %}
     <h1>Listing Page for {{listing.title}}</h1><br><br>
 
-    <div class="container-fluid">
+    <div class="container-fluid">   
         <h3><strong>Listing: {{listing.title}}</strong></h3>
+        <form action="{% url 'listing' listing_id=listing.id %}" method="post">
+            {% csrf_token %}
+            {% if user in listing.watchers.all %}
+            <input type="submit" class="btn btn-primary" disabled value="Add to watchlist">
+            {% else %}
+            <input type="submit" class="btn btn-primary" value="Add to watchlist">
+            <input type="hidden" name="formType" value="formWatchlist">
+            {% endif %}
+        </form><br>
         <img src="{{listing.image}}" style="max-width:90vw;height:40vh;"><br>
         {{listing.description}}
         <h3>Current Price: ${{bid.amount}}</h3>
@@ -13,6 +22,7 @@
             {% csrf_token %}
             <input type="number" placeholder="Bid" class="form-control" name="bid"><br>
             <input type="submit" class="btn btn-primary" value="Place Bid">
+            <input type="hidden" name="formType" value="formBid">
         </form>
         <br>
         <h4>Details</h4>

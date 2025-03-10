@@ -12,6 +12,8 @@ class Listing(models.Model):
     category = models.CharField(max_length=64, blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     creationTime = models.CharField(max_length=64)
+    isActive = models.BooleanField(default=True)
+    watchers = models.ManyToManyField(User, blank=True, related_name="watchedListings")
 
     def __str__(self):
         return f"{self.id}: {self.title} by {self.creator}"
@@ -32,3 +34,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.id}: comment under {self.listing} by {self.creator}"
+    
