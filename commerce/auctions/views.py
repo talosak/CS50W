@@ -93,16 +93,22 @@ def listing(request, listing_id):
     if request.method == "POST" and request.POST["formType"] == "formWatchlist":
         listing.watchers.add(request.user)
         listing.save()
-        return redirect("listing")
+        return redirect("listing", listing_id=listing.id)
     elif request.method == "POST":
         amount = request.POST["bid"]
         if amount == None or not amount.isnumeric():
             return render(request, "auctions/listing.html", {
-                "message": "Please fill out the bid field with a positive integer."
+                "message": "Please fill out the bid field with a positive integer.",
+                "listing": listing,
+                "bid": bid,
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1
             })
         if bid.amount >= int(amount):
             return render(request, "auctions/listing.html", {
-                "message": "Bid has to excede the price."
+                "message": "Bid has to excede the price.",
+                "listing": listing,
+                "bid": bid,
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1
             })
         newBid = Bid(bidder=request.user, listing=listing, amount=amount, creationTime=datetime.now().strftime("on %x at %X"))
         newBid.save()

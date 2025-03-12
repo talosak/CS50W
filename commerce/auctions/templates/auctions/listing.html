@@ -1,6 +1,10 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if message %}
+        <div style="font-size:20px; color:red;">{{ message }}</div>
+    {% endif %}
+
     <h1>Listing Page for {{listing.title}}</h1><br><br>
 
     <div class="container-fluid">   
