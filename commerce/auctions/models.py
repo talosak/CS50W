@@ -14,6 +14,7 @@ class Listing(models.Model):
     creationTime = models.CharField(max_length=64)
     isActive = models.BooleanField(default=True)
     watchers = models.ManyToManyField(User, blank=True, related_name="watchedListings")
+    startingPrice = models.IntegerField()
 
     def __str__(self):
         return f"{self.id}: {self.title} by {self.creator}"

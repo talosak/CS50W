@@ -4,22 +4,26 @@
     <h1>Active Listings:</h1><br><br>
 
     {% for listing in listings %}
-        <div class="border border-dark"></div>
-        <br>
-        <div class="container-fluid">
-            <div class="row">
-                <div>
-                    <img src="{{listing.image}}" width="700" height="350" style="object-fit:contain;">
+        {% if listing.isActive %}
+            <div class="border border-dark"></div>
+            <br>
+            <div class="container-fluid">
+                <div class="row">
+                    {% if listing.image %}
+                    <div>
+                        <img src="{{listing.image}}" width="700" height="350" style="object-fit:contain;">
+                    </div>
+                    {% endif %}
+                    <div>
+                        <a href="{% url 'listing' listing_id=listing.id %}" style="color: black;"><h3><strong>{{listing.title}}</strong></h3></a><br>
+                        {{listing.description}}
+                        <br><br>
+                        <h3>Price: ${{listing.amount}}</h3><br>
+                        Created {{listing.creationTime}}
+                    </div>
                 </div>
-                <div>
-                    <a href="{% url 'listing' listing_id=listing.id %}" style="color: black;"><h3><strong>{{listing.title}}</strong></h3></a><br>
-                    {{listing.description}}
-                    <br><br>
-                    <h3>Price: ${{listing.amount}}</h3><br>
-                    Created {{listing.creationTime}}
-                </div>
-            </div>
-        </div>                
-        <br>
+            </div>                
+            <br>
+        {% endif %}
     {% endfor %}
 {% endblock %}

@@ -2,7 +2,19 @@
 
 {% block body %}
     {% if message %}
-        <div style="font-size:20px; color:red;">{{ message }}</div>
+        <div style="font-size:30px; color:red;">{{ message }}</div>
+    {% endif %}
+
+    {% if not listing.isActive %}
+        <strong><div style="font-size:30px; color:red;">!!! This listing is closed !!!</div></strong>
+    {% endif %}
+
+    {% if not user.is_authenticated %}
+        <strong><div style="font-size:30px; color:red;">!!! You are not logged in !!!</div></strong>
+    {% endif %}
+
+    {% if user == bid.bidder and not listing.isActive %}
+        <strong><div style="font-size:30px; color:lime;">You have won the listing!</div></strong>
     {% endif %}
 
     <h1>Listing Page for {{listing.title}}</h1><br><br>
@@ -11,21 +23,29 @@
         <h3><strong>Listing: {{listing.title}}</strong></h3>
         <form action="{% url 'listing' listing_id=listing.id %}" method="post">
             {% csrf_token %}
-            {% if user in listing.watchers.all %}
-            <input type="submit" class="btn btn-primary" disabled value="Add to watchlist">
+            {% if not user.is_authenticated %}
+                <input type="submit" class="btn btn-primary" disabled value="Add to watchlist">
+            {% elif not listing.isActive and user not in listing.watchers.all %}
+                <input type="submit" class="btn btn-primary" disabled value="Add to watchlist">
+            {% elif user in listing.watchers.all %}
+                <input type="submit" class="btn btn-warning" value="Remove from watchlist">
             {% else %}
-            <input type="submit" class="btn btn-primary" value="Add to watchlist">
-            <input type="hidden" name="formType" value="formWatchlist">
+                <input type="submit" class="btn btn-primary" value="Add to watchlist">
             {% endif %}
+            <input type="hidden" name="formType" value="formWatchlist">
         </form><br>
-        <img src="{{listing.image}}" style="max-width:90vw;height:40vh;"><br>
+        {% if listing.image %}<img src="{{listing.image}}" style="max-width:90vw;height:40vh;"><br>{% endif %}
         {{listing.description}}
         <h3>Current Price: ${{bid.amount}}</h3>
         {{bidCount}} bid(s) so far. Current bid belongs to {{bid.bidder}}.<br><br>
         <form action="{% url 'listing' listing_id=listing.id %}" method="post">
             {% csrf_token %}
             <input type="number" placeholder="Bid" class="form-control" name="bid"><br>
-            <input type="submit" class="btn btn-primary" value="Place Bid">
+            {% if not listing.isActive or not user.is_authenticated %}
+                <input type="submit" disabled class="btn btn-primary" value="Place Bid">
+            {% else %}
+                <input type="submit" class="btn btn-primary" value="Place Bid">
+            {% endif %}
             <input type="hidden" name="formType" value="formBid">
         </form>
         <br>
@@ -35,6 +55,17 @@
             <li>Category: {{listing.category}}</li>
             <li>Date of creation: {{listing.creationTime}}</li>
         </ul>
+        {% if user == listing.creator %}
+        <form action="{% url 'listing' listing_id=listing.id %}" method="post">
+            {% csrf_token %}
+            {% if listing.isActive %}
+            <input type="submit" class="btn btn-danger" value="Close Listing">
+            {% else %}
+            <input type="submit" disabled class="btn btn-danger" value="Close Listing">
+            {% endif %}
+            <input type="hidden" name="formType" value="formClose">
+        </form>
+        {% endif %}
     </div>                
     <br>
 {% endblock %}

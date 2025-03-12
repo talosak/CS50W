@@ -5,13 +5,14 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.db.models import Max, Count
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Bid, Listing, Comment
 
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.annotate(amount=Max("bids__amount"), bidCount=Count("bids")-1),
+        "listings": Listing.objects.annotate(amount=Max("bids__amount"), bidCount=Count("bids")-1).order_by('-id').values(),
     })
 
 
@@ -66,19 +67,23 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
     
+@login_required
 def create(request):
     if request.method == "POST":
         title = request.POST["title"]
         description = request.POST["description"]
         startingBid = request.POST["starting-bid"]
         imageLink = request.POST["image-link"]
-        category = request.POST["category"]
+        if request.POST["category"]:
+            category = request.POST["category"]
+        else:
+            category = None
         creationTime = datetime.now().strftime("on %x at %X")
         if title == None or description == None or startingBid == None:
             return render(request, "auctions/register.html", {
                 "message": "Please fill out all non-optional fields."
             })
-        listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user, creationTime=creationTime, isActive=True)
+        listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user, creationTime=creationTime, isActive=True, startingPrice=startingBid)
         bid = Bid(bidder=request.user, listing=listing, amount=startingBid, creationTime=creationTime)
         listing.save()
         bid.save()
@@ -89,9 +94,20 @@ def create(request):
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     highestAmount = Bid.objects.filter(listing=listing).aggregate(Max("amount"))
-    bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).get()
+    if Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).count() > 1:
+        bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).exclude(bidder=listing.creator).get()
+    else:
+        bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).get()
     if request.method == "POST" and request.POST["formType"] == "formWatchlist":
-        listing.watchers.add(request.user)
+        if request.user in listing.watchers.all():
+            listing.watchers.remove(request.user)
+            listing.save()
+        else:
+            listing.watchers.add(request.user)
+            listing.save()
+        return redirect("listing", listing_id=listing.id)
+    elif request.method == "POST" and request.POST["formType"] == "formClose":
+        listing.isActive = False
         listing.save()
         return redirect("listing", listing_id=listing.id)
     elif request.method == "POST":
@@ -103,9 +119,16 @@ def listing(request, listing_id):
                 "bid": bid,
                 "bidCount": Bid.objects.filter(listing=listing).count() - 1
             })
-        if bid.amount >= int(amount):
+        if int(amount) < bid.amount and Bid.objects.filter(listing=listing).count() - 1 == 0:
             return render(request, "auctions/listing.html", {
-                "message": "Bid has to excede the price.",
+                "message": "Bid has to excede or match the starting price.",
+                "listing": listing,
+                "bid": bid,
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1
+            })
+        if int(amount) <= bid.amount and Bid.objects.filter(listing=listing).count() - 1 != 0:
+            return render(request, "auctions/listing.html", {
+                "message": "Bid has to excede the current bid.",
                 "listing": listing,
                 "bid": bid,
                 "bidCount": Bid.objects.filter(listing=listing).count() - 1
