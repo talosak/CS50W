@@ -110,35 +110,52 @@ def listing(request, listing_id):
         listing.isActive = False
         listing.save()
         return redirect("listing", listing_id=listing.id)
+    elif request.method == "POST" and request.POST["formType"] == "formComment":
+        content = request.POST["comment"]
+        if content == "":
+            return render(request, "auctions/listing.html", {
+                "message": "Please fill out the comment field before submitting a comment.",
+                "listing": listing,
+                "bid": bid,
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1,
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
+            })
+        comment = Comment(creator=request.user, listing=listing, content=content,creationTime=datetime.now().strftime("on %x at %X"))
+        comment.save()
+        return redirect("index")
     elif request.method == "POST":
         amount = request.POST["bid"]
-        if amount == None or not amount.isnumeric():
+        if amount == "" or not amount.isnumeric():
             return render(request, "auctions/listing.html", {
                 "message": "Please fill out the bid field with a positive integer.",
                 "listing": listing,
                 "bid": bid,
-                "bidCount": Bid.objects.filter(listing=listing).count() - 1
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1,
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
             })
         if int(amount) < bid.amount and Bid.objects.filter(listing=listing).count() - 1 == 0:
             return render(request, "auctions/listing.html", {
                 "message": "Bid has to excede or match the starting price.",
                 "listing": listing,
                 "bid": bid,
-                "bidCount": Bid.objects.filter(listing=listing).count() - 1
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1,
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
             })
         if int(amount) <= bid.amount and Bid.objects.filter(listing=listing).count() - 1 != 0:
             return render(request, "auctions/listing.html", {
                 "message": "Bid has to excede the current bid.",
                 "listing": listing,
                 "bid": bid,
-                "bidCount": Bid.objects.filter(listing=listing).count() - 1
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1,
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
             })
-        newBid = Bid(bidder=request.user, listing=listing, amount=amount, creationTime=datetime.now().strftime("on %x at %X"))
+        newBid = Bid(creator=request.user, listing=listing, amount=amount, creationTime=datetime.now().strftime("on %x at %X"))
         newBid.save()
         return redirect("index")
     else:
         return render(request, "auctions/listing.html", {
             "listing": listing,
             "bid": bid,
-            "bidCount": Bid.objects.filter(listing=listing).count() - 1
+            "bidCount": Bid.objects.filter(listing=listing).count() - 1,
+            "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
         })

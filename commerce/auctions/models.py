@@ -30,7 +30,7 @@ class Bid(models.Model):
 class Comment(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
-    creationTime = models.DateTimeField(max_length=64)
+    creationTime = models.CharField(max_length=64)
     content = models.TextField()
 
     def __str__(self):
