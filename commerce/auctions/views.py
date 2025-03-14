@@ -159,3 +159,9 @@ def listing(request, listing_id):
             "bidCount": Bid.objects.filter(listing=listing).count() - 1,
             "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
         })
+
+@login_required    
+def watchlist(request):
+    return render(request, "auctions/watchlist.html", {
+        "listings": Listing.objects.filter(watchers=request.user).annotate(amount=Max("bids__amount"), bidCount=Count("bids")-1).order_by('-id').values()
+    })
