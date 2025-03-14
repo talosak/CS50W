@@ -24,12 +24,9 @@
         <div>
             <label for="category" class="form-label">Category (optional):</label>
             <select name="category" class="form-control" style="width:95%;">
-                <option value="Unspecified">Unspecified</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Toys">Toys</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Home">Home</option>
-                <option value="Tomfoolery">Tomfoolery</option>
+                {% for category in categories %}
+                    <option value="{{category}}">{{category}}</option>
+                {% endfor %}
             </select>
         </div><br>
         <div>

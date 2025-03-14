@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import User, Bid, Listing, Comment
 
+categoryList = ["Unspecified", "Fashion", "Toys", "Electronics", "Home", "Tomfoolery"]
 
 def index(request):
     return render(request, "auctions/index.html", {
@@ -81,7 +82,8 @@ def create(request):
         creationTime = datetime.now().strftime("on %x at %X")
         if title == None or description == None or startingBid == None:
             return render(request, "auctions/register.html", {
-                "message": "Please fill out all non-optional fields."
+                "message": "Please fill out all non-optional fields.",
+                "categories": categoryList,
             })
         listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user, creationTime=creationTime, isActive=True, startingPrice=startingBid)
         bid = Bid(bidder=request.user, listing=listing, amount=startingBid, creationTime=creationTime)
@@ -89,7 +91,9 @@ def create(request):
         bid.save()
         return redirect("index")
     else:
-        return render(request, "auctions/create.html")
+        return render(request, "auctions/create.html", {
+            "categories": categoryList,
+        })
     
 def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
@@ -118,7 +122,7 @@ def listing(request, listing_id):
                 "listing": listing,
                 "bid": bid,
                 "bidCount": Bid.objects.filter(listing=listing).count() - 1,
-                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id'),
             })
         comment = Comment(creator=request.user, listing=listing, content=content,creationTime=datetime.now().strftime("on %x at %X"))
         comment.save()
@@ -131,7 +135,7 @@ def listing(request, listing_id):
                 "listing": listing,
                 "bid": bid,
                 "bidCount": Bid.objects.filter(listing=listing).count() - 1,
-                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id'),
             })
         if int(amount) < bid.amount and Bid.objects.filter(listing=listing).count() - 1 == 0:
             return render(request, "auctions/listing.html", {
@@ -139,7 +143,7 @@ def listing(request, listing_id):
                 "listing": listing,
                 "bid": bid,
                 "bidCount": Bid.objects.filter(listing=listing).count() - 1,
-                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id'),
             })
         if int(amount) <= bid.amount and Bid.objects.filter(listing=listing).count() - 1 != 0:
             return render(request, "auctions/listing.html", {
@@ -147,7 +151,7 @@ def listing(request, listing_id):
                 "listing": listing,
                 "bid": bid,
                 "bidCount": Bid.objects.filter(listing=listing).count() - 1,
-                "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id'),
             })
         newBid = Bid(creator=request.user, listing=listing, amount=amount, creationTime=datetime.now().strftime("on %x at %X"))
         newBid.save()
@@ -157,11 +161,22 @@ def listing(request, listing_id):
             "listing": listing,
             "bid": bid,
             "bidCount": Bid.objects.filter(listing=listing).count() - 1,
-            "comments": Comment.objects.filter(listing=listing).all().order_by('-id')
+            "comments": Comment.objects.filter(listing=listing).all().order_by('-id'),
         })
 
 @login_required    
 def watchlist(request):
     return render(request, "auctions/watchlist.html", {
         "listings": Listing.objects.filter(watchers=request.user).annotate(amount=Max("bids__amount"), bidCount=Count("bids")-1).order_by('-id').values()
+    })
+
+def categories(request):
+    return render(request, "auctions/categories.html", {
+        "categories": categoryList,
+    })
+
+def categoriesResults(request, category):
+    return render(request, "auctions/categoriesResults.html", {
+        "category": category,
+        "listings": Listing.objects.filter(category=category).annotate(amount=Max("bids__amount"), bidCount=Count("bids")-1).order_by('-id').values()
     })
