@@ -3,7 +3,6 @@
 {% block body %}
     <h1>Results for category: {{category}}</h1>
     {% for listing in listings %}
-        {% if listing.isActive %}
             <div class="border border-dark"></div>
                     <br>
                     <div class="container-fluid">
@@ -18,12 +17,12 @@
                                 {{listing.description}}
                                 <br><br>
                                 <h3>Price: ${{listing.amount}}</h3><br>
-                                Created {{listing.creationTime}}
+                                Created {{listing.creationTime}}<br><br>
+                                Status: {% if listing.isActive %}<span style="color:lime">Active</span>{% else %}<span style="color:red">Closed</span>{% endif %}
                             </div>
                         </div>
                     </div>                
                     <br>
-        {% endif %}
     {% empty %}
         <h3>None.</h3>
     {% endfor %}

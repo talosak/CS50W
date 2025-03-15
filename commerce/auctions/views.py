@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.db.models import Max, Count
+from django.db.models import Max, Count, Min
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
 
@@ -99,7 +99,8 @@ def listing(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
     highestAmount = Bid.objects.filter(listing=listing).aggregate(Max("amount"))
     if Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).count() > 1:
-        bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).exclude(bidder=listing.creator).get()
+        first = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).aggregate(Min("id"))
+        bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).exclude(pk=first['id__min']).get()
     else:
         bid = Bid.objects.filter(listing=listing, amount=int(highestAmount['amount__max'])).get()
     if request.method == "POST" and request.POST["formType"] == "formWatchlist":
@@ -153,7 +154,7 @@ def listing(request, listing_id):
                 "bidCount": Bid.objects.filter(listing=listing).count() - 1,
                 "comments": Comment.objects.filter(listing=listing).all().order_by('-id'),
             })
-        newBid = Bid(creator=request.user, listing=listing, amount=amount, creationTime=datetime.now().strftime("on %x at %X"))
+        newBid = Bid(bidder=request.user, listing=listing, amount=amount, creationTime=datetime.now().strftime("on %x at %X"))
         newBid.save()
         return redirect("index")
     else:
