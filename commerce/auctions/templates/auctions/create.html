@@ -1,6 +1,9 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if message %}
+        <div style="font-size:30px; color:red;">{{ message }}</div>
+    {% endif %}
     <h2>Create Listing</h2>
     <br>
     <form action="{% url 'create' %}" method="post">

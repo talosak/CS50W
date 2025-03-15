@@ -80,10 +80,18 @@ def create(request):
         else:
             category = None
         creationTime = datetime.now().strftime("on %x at %X")
-        if title == None or description == None or startingBid == None:
-            return render(request, "auctions/register.html", {
+        if title == "" or description == "" or startingBid == "":
+            return render(request, "auctions/create.html", {
                 "message": "Please fill out all non-optional fields.",
                 "categories": categoryList,
+            })
+        if startingBid == "" or not startingBid.isnumeric():
+            return render(request, "auctions/listing.html", {
+                "message": "Please fill out the bid field with a positive integer.",
+                "listing": listing,
+                "bid": bid,
+                "bidCount": Bid.objects.filter(listing=listing).count() - 1,
+                "comments": Comment.objects.filter(listing=listing).all().order_by('-id'),
             })
         listing = Listing(title=title, description=description, image=imageLink, category=category, creator=request.user, creationTime=creationTime, isActive=True, startingPrice=startingBid)
         bid = Bid(bidder=request.user, listing=listing, amount=startingBid, creationTime=creationTime)
