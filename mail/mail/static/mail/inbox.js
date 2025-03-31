@@ -32,15 +32,28 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // Get emails
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
-      // Log emails
-      console.log(emails);
-  
-      // ... do something else with emails ... TODO
+    console.log(emails);
+    // Render emails
+    emails.forEach(email => {
+      let div = document.createElement('div');
+      div.innerHTML = `<h4> Email from: ${email.sender}<h4>
+                        <h3> Subject: ${email.subject}<h3>
+                        <h5> Date of creation: ${email.timestamp}`;
+      div.style.border = 'solid 2px #232323';
+      div.style.padding = '10px';
+      if (email.read) {
+        div.style.backgroundColor = 'gray';
+      } else {
+        div.style.backgroundColor = 'white';
+      }
+      document.querySelector('#emails-view').append(div);
+    });
   });
-  
 }
 
 function send_email(event) {
@@ -56,11 +69,8 @@ function send_email(event) {
         body: document.querySelector('#compose-body').value
     })
   })
-  .then(response => response.json())
-  .then(result => {
-      console.log(result);
-  });  
+  .then(response => response.json()); 
 
-  // Load user's mailbox
+  // Load user's sent mailbox
   load_mailbox('sent');
 }
