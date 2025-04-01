@@ -91,12 +91,33 @@ function view_email(email_id) {
     document.querySelector('#email-view').style.display = 'block';
     document.querySelector('#compose-view').style.display = 'none';
     document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#email-archive').style.display = 'none';
+    document.querySelector('#email-unarchive').style.display = 'none';
 
     document.querySelector('#email-sender').innerHTML = email.sender;
     document.querySelector('#email-recipients').innerHTML = email.recipients;
     document.querySelector('#email-subject').innerHTML = email.subject;
     document.querySelector('#email-timestamp').innerHTML = email.timestamp;
     document.querySelector('#email-body').innerHTML = email.body;
+
+    // Replace archive/unarchive buttons to remove previous event listeners
+    document.querySelector('#email-archive').replaceWith(document.querySelector('#email-archive').cloneNode(true));
+    document.querySelector('#email-unarchive').replaceWith(document.querySelector('#email-unarchive').cloneNode(true));
+
+    // Load archive/unarchive buttons
+    fetch(`/emails/inbox`).then(response => response.json()).then(inbox => {
+      fetch(`/emails/archive`).then(response => response.json()).then(archived => {
+        if (JSON.stringify(inbox).includes(JSON.stringify(email)) && !JSON.stringify(archived).includes(JSON.stringify(email))) {
+          document.querySelector('#email-archive').style.display = 'block';
+          document.querySelector('#email-unarchive').style.display = 'none';
+          document.querySelector('#email-archive').addEventListener('click', () => {archive(email_id)});
+        } else if (JSON.stringify(archived).includes(JSON.stringify(email))) {
+          document.querySelector('#email-unarchive').style.display = 'block';
+          document.querySelector('#email-archive').style.display = 'none';
+          document.querySelector('#email-unarchive').addEventListener('click', () => {unarchive(email_id)});
+        }
+      });
+    });
   });
 
   // Mark email as read
@@ -106,4 +127,36 @@ function view_email(email_id) {
         read: true
     })
   }); 
+}
+
+function archive(email_id) {
+  // Archive
+  fetch(`/emails/${email_id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        archived: true
+    })
+  });
+  
+  // Load user's inbox after giving it some time
+  setTimeout(function() {
+    load_mailbox('inbox');
+  }, 100);
+}
+
+
+function unarchive(email_id) {
+  // Unarchive
+  fetch(`/emails/${email_id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        archived: false
+    })
+  });
+  
+  // Load user's inbox after giving it some time
+  setTimeout(function() {
+    load_mailbox('inbox');
+  }, 100);
+  
 }
