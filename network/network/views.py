@@ -3,19 +3,16 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.db.models import Count
+from django.http import JsonResponse
+import json
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from .models import User, Post
 
 
 def index(request):
-    if request.method == "POST":
-        creator = request.user
-        content = request.POST["create-post-content"]
-        post = Post(creator=creator, content=content)
-        post.save()
-        return redirect("index")
-    else:
-        return render(request, "network/index.html")
+    return render(request, "network/index.html")
 
 
 def login_view(request):
@@ -68,3 +65,15 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+    
+# API route
+@csrf_exempt
+def posts(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        content = data.get("content", "")
+        creator = request.user
+        post = Post(creator=creator, content=content)
+        post.save()
+        redirect("index")
+        return JsonResponse({"message": "Post created successfully."}, status=201)
