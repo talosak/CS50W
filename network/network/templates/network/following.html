@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block script %}
+    <script src="{% static 'network/following.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <input type="hidden" id="serializedUser" value="{{serializedUser}}">
+        <h1 class="pt-3">Following</h1>
+        <div id="posts-container">
+        </div>
+    </div>
+{% endblock %}

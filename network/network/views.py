@@ -99,3 +99,14 @@ def profile(request, user_id):
         return render(request, "network/profile.html", {
             "profile": User.objects.filter(pk=user_id).annotate(followerCount=Count("followers"), followedUserCount=Count("followedUsers")).get()
         })
+
+@csrf_exempt  
+def following(request):
+    if request.method == "POST":
+        currentUser = User.objects.get(pk=request.user.id)
+        followedUsers = currentUser.followedUsers.all()
+        return JsonResponse([followedUser.serialize() for followedUser in followedUsers], safe=False)
+    else:
+        if not request.user.is_authenticated:
+            return redirect("index")
+        return render(request, "network/following.html")
