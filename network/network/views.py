@@ -81,3 +81,21 @@ def posts(request):
         # Get all posts
         posts = Post.objects.order_by("-timestamp").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
+    
+def profile(request, user_id):
+    # Get user
+    try:
+        profile = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "User not found."}, status=404)
+    if request.method == "POST":
+        if request.POST["formType"] == "follow":
+            profile.followers.add(request.user)
+            return redirect("profile", user_id=user_id)
+        else:
+            profile.followers.remove(request.user)
+            return redirect("profile", user_id=user_id)
+    else:        
+        return render(request, "network/profile.html", {
+            "profile": User.objects.filter(pk=user_id).annotate(followerCount=Count("followers"), followedUserCount=Count("followedUsers")).get()
+        })

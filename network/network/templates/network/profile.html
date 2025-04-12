@@ -1,0 +1,34 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block script %}
+    <script src="{% static 'network/profile.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row m-2">
+            <h1>Profile for: {{profile.username}}</h1>
+            <h2 class="mt-2 ml-4">Followers: {{profile.followerCount}}</h2>
+            <h2 class="mt-2 ml-4">Following: {{profile.followedUserCount}}</h2>
+            {% if request.user.id is profile.id %}
+            {% elif request.user not in profile.followers.all %}
+                <form action="{% url 'profile' user_id=profile.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" id="followButton" class="ml-4 mt-2 btn btn-primary" style="height:80%;" value="Follow">
+                    <input type="hidden" name="formType" value="follow">
+                </form>
+            {% else %}
+                <form action="{% url 'profile' user_id=profile.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" name="submitButton" id="unfollowButton" class="ml-4 mt-2 btn btn-warning" style="height:80%;" value="Unfollow">
+                    <input type="hidden" name="formType" value="unfollow">
+                </form>
+            {% endif %}  
+        </div>
+        <input type="hidden" id="user_id" value="{{profile.id}}">
+        <div id="posts-container">
+        </div>
+    </div>
+{% endblock %}
+

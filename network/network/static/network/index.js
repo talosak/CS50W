@@ -43,15 +43,29 @@ function renderPosts() {
     .then(posts => {
         // Render posts
         posts.forEach(post => {
-            console.log(post)
             let div = document.createElement('div');
-            div.innerHTML = `<div class="p-3 my-2 border border-secondary">
-                <h3><strong>${post.creator}</strong></h3>
-                <h4>${post.content}</h4>
-                <h4>${post.timestamp}</h4>
-                <div id="likes" class="p-1 border border-secondary" style="font-size:120%;width:fit-content;">Likes: ${post.likers.length}</div>
-            </div>`;
-            document.querySelector('#posts-container').append(div);
+            div.classList.add("p-3", "my-2", "border", "border-secondary");
+            let usernameElement = document.createElement('h3');
+            usernameElement.innerHTML = `<strong>${post.creator.username}</strong>`;
+            usernameElement.style.cursor = 'pointer';
+            usernameElement.addEventListener('click', () => {
+                baseUrl = document.querySelector("#data").dataset.baseUrl;
+                window.location.href = baseUrl.replace("0", post.creator.id);
+            });
+            div.append(usernameElement);
+            let contentElement = document.createElement('h4');
+            contentElement.innerHTML = `${post.content}`;
+            div.append(contentElement);
+            let timestampElement =  document.createElement('h4');
+            timestampElement.innerHTML = `${post.timestamp}`;
+            div.append(timestampElement);
+            let likesElement = document.createElement('div');
+            likesElement.classList.add("p-1", "border", "border-secondary");
+            likesElement.style = "font-size:120%;width:fit-content;";
+            likesElement.innerHTML = `Likes: ${post.likers.length}`;
+            div.append(likesElement);
+
+            document.querySelector('#posts-container').append(div);  
         }); 
     });
 }

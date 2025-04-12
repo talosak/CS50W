@@ -5,6 +5,13 @@ from django.db import models
 class User(AbstractUser):
     followers = models.ManyToManyField("User", blank=True, related_name="followedUsers")
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "followers": [follower.id for follower in self.followers.all()]
+        }
+
 class Post(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="createdPosts")
     content = models.TextField(blank=True)
@@ -14,9 +21,9 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "creator": self.creator.username,
+            "creator": self.creator.serialize(),
             "content": self.content,
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
-            "likers": [liker.username for liker in self.likers.all()]
+            "likers": [liker.id for liker in self.likers.all()]
         }
 
