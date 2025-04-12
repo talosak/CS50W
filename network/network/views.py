@@ -77,3 +77,7 @@ def posts(request):
         post.save()
         redirect("index")
         return JsonResponse({"message": "Post created successfully."}, status=201)
+    else:
+        # Get all posts
+        posts = Post.objects.order_by("-timestamp").all()
+        return JsonResponse([post.serialize() for post in posts], safe=False)
