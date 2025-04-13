@@ -1,16 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     var page_id = document.querySelector('#page_id').value
+    var currentUser_id = document.querySelector('#current-user-id').value
 
     // Get profile_id
     var profile_id = document.querySelector('#user_id').value
 
-    renderUserPosts(profile_id, page_id);
+    renderUserPosts(profile_id, page_id, currentUser_id);
 
 
 });
 
-function renderUserPosts(profile_id, page_id) {
+function renderUserPosts(profile_id, page_id, currentUser_id) {
     // Get posts
     fetch('/posts')
     .then(response => response.json())
@@ -38,11 +39,19 @@ function renderUserPosts(profile_id, page_id) {
                     div.classList.add("p-3", "my-2", "border", "border-secondary");
                     let usernameElement = document.createElement('h3');
                     usernameElement.innerHTML = `<strong>${post.creator.username}</strong>`;
+                    usernameElement.style.cursor = 'pointer';
+                    usernameElement.addEventListener('click', () => {
+                        baseUrl = document.querySelector("#data").dataset.baseUrl;
+                        window.location.href = baseUrl.replace("0", post.creator.id);
+                    });
                     div.append(usernameElement);
+                    let editElement = document.createElement('h4');
+                    editElement.innerHTML = `<span style="color:dodgerblue;">Edit</span>`;
+                    div.append(editElement);
                     let contentElement = document.createElement('h4');
                     contentElement.innerHTML = `${post.content}`;
                     div.append(contentElement);
-                    let timestampElement =  document.createElement('h4');
+                    let timestampElement = document.createElement('h4');
                     timestampElement.innerHTML = `${post.timestamp}`;
                     div.append(timestampElement);
                     let likesElement = document.createElement('div');
@@ -50,8 +59,12 @@ function renderUserPosts(profile_id, page_id) {
                     likesElement.style = "font-size:120%;width:fit-content;";
                     likesElement.innerHTML = `Likes: ${post.likers.length}`;
                     div.append(likesElement);
-
                     document.querySelector('#posts-container').append(div);
+                }
+                if (parseInt(currentUser_id) === parseInt(post.creator.id)) {
+                    editElement.style.display = 'block';
+                } else {
+                    editElement.style.display = 'none';
                 }
             });
             if (!page.hasPrevious) {

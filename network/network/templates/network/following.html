@@ -7,6 +7,7 @@
 
 {% block body %}
     <div class="container-fluid">
+        <div id="data" data-base-url="{% url 'profile' user_id=0 %}"></div>
         <input type="hidden" id="serializedUser" value="{{serializedUser}}">
         <input type="hidden" id="page_id" value="{{page_id}}">
         <h1 class="pt-3">Following</h1>

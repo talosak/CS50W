@@ -82,6 +82,13 @@ def posts(request):
         post.save()
         redirect("index")
         return JsonResponse({"message": "Post created successfully."}, status=201)
+    elif request.method == "PUT":
+        data = json.loads(request.body)
+        post = Post.objects.get(pk=data.get("id", ""))
+        newContent = data.get("content", "")
+        post.content = newContent
+        post.save()
+        return JsonResponse({"message": "Post edited successfully."}, status=201)
     else:
         # Get all posts
         posts = Post.objects.order_by("-timestamp").all()
