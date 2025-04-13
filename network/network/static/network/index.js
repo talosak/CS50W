@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    var page_id = 1
+    var page_id = document.querySelector('#page_id').value
     
     document.querySelector('#create-post-form').addEventListener('submit', createPost);
 
@@ -52,9 +52,9 @@ function renderPosts(page_id) {
             })
         })
         .then(response => response.json())
-        .then(paginatedPosts => {
+        .then(page => {
             // Render posts
-            paginatedPosts.list.forEach(post => {
+            page.list.forEach(post => {
                 let div = document.createElement('div');
                 div.classList.add("p-3", "my-2", "border", "border-secondary");
                 let usernameElement = document.createElement('h3');
@@ -68,7 +68,7 @@ function renderPosts(page_id) {
                 let contentElement = document.createElement('h4');
                 contentElement.innerHTML = `${post.content}`;
                 div.append(contentElement);
-                let timestampElement =  document.createElement('h4');
+                let timestampElement = document.createElement('h4');
                 timestampElement.innerHTML = `${post.timestamp}`;
                 div.append(timestampElement);
                 let likesElement = document.createElement('div');
@@ -76,9 +76,21 @@ function renderPosts(page_id) {
                 likesElement.style = "font-size:120%;width:fit-content;";
                 likesElement.innerHTML = `Likes: ${post.likers.length}`;
                 div.append(likesElement);
-
                 document.querySelector('#posts-container').append(div);  
             });
+            if (!page.hasPrevious) {
+                document.querySelector('#previous-page').style.display = 'none';
+            }
+            if (!page.hasNext) {
+                document.querySelector('#next-page').style.display = 'none';
+            }
+            if (page.pageCount === 1) {
+                document.querySelector('#second-page').style.display = 'none';
+                document.querySelector('#third-page').style.display = 'none';
+            }
+            if (page.pageCount === 2) {
+                document.querySelector('#third-page').style.display = 'none';
+            }
         });     
     });
 }

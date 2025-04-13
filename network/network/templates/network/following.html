@@ -8,8 +8,18 @@
 {% block body %}
     <div class="container-fluid">
         <input type="hidden" id="serializedUser" value="{{serializedUser}}">
+        <input type="hidden" id="page_id" value="{{page_id}}">
         <h1 class="pt-3">Following</h1>
         <div id="posts-container">
         </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" id="previous-page"><a class="page-link" href="{% url 'following' page_id=page_idMinusOne %}">Previous</a></li>
+                <li class="page-item" id="first-page"><a class="page-link" href="{% url 'following' page_id=1 %}">1</a></li>
+                <li class="page-item" id="second-page"><a class="page-link" href="{% url 'following' page_id=2 %}">2</a></li>
+                <li class="page-item" id="third-page"><a class="page-link" href="{% url 'following' page_id=3 %}">3</a></li>
+                <li class="page-item" id="next-page"><a class="page-link" href="{% url 'following' page_id=page_idPlusOne %}">Next</a></li>
+            </ul>
+        </nav>
     </div>
 {% endblock %}

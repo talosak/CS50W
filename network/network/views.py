@@ -12,8 +12,12 @@ from django.core.paginator import Paginator
 from .models import User, Post
 
 
-def index(request):
-    return render(request, "network/index.html")
+def index(request, page_id=1):  
+    return render(request, "network/index.html", {
+        "page_id": page_id,
+        "page_idPlusOne": page_id + 1,
+        "page_idMinusOne": page_id - 1,
+    })
 
 
 def login_view(request):
@@ -83,7 +87,7 @@ def posts(request):
         posts = Post.objects.order_by("-timestamp").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
     
-def profile(request, user_id):
+def profile(request, user_id, page_id=1):
     # Get user
     try:
         profile = User.objects.get(pk=user_id)
@@ -98,11 +102,14 @@ def profile(request, user_id):
             return redirect("profile", user_id=user_id)
     else:        
         return render(request, "network/profile.html", {
-            "profile": User.objects.filter(pk=user_id).annotate(followerCount=Count("followers"), followedUserCount=Count("followedUsers")).get()
+            "profile": User.objects.filter(pk=user_id).annotate(followerCount=Count("followers"), followedUserCount=Count("followedUsers")).get(),
+            "page_id": page_id,
+            "page_idPlusOne": page_id + 1,
+            "page_idMinusOne": page_id - 1,
         })
 
 @csrf_exempt  
-def following(request):
+def following(request, page_id=1):
     if request.method == "POST":
         currentUser = User.objects.get(pk=request.user.id)
         followedUsers = currentUser.followedUsers.all()
@@ -110,7 +117,11 @@ def following(request):
     else:
         if not request.user.is_authenticated:
             return redirect("index")
-        return render(request, "network/following.html")
+        return render(request, "network/following.html", {
+            "page_id": page_id,
+            "page_idPlusOne": page_id + 1,
+            "page_idMinusOne": page_id - 1,
+        })
 
 @csrf_exempt 
 def paginate(request):
@@ -131,6 +142,7 @@ def paginate(request):
         "hasNext": page.has_next(),
         "hasPrevious": page.has_previous(),
         "nextPageNumber": next_page_number,
-        "previousPageNumber": previous_page_number
+        "previousPageNumber": previous_page_number,
+        "pageCount": paginator.num_pages,
     }
     return JsonResponse(serializedPage)

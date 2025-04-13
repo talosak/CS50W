@@ -11,6 +11,7 @@
             <h1>Profile for: {{profile.username}}</h1>
             <h2 class="mt-2 ml-4">Followers: {{profile.followerCount}}</h2>
             <h2 class="mt-2 ml-4">Following: {{profile.followedUserCount}}</h2>
+            <input type="hidden" id="page_id" value="{{page_id}}">
             {% if request.user.id is profile.id %}
             {% elif request.user not in profile.followers.all %}
                 <form action="{% url 'profile' user_id=profile.id %}" method="post">
@@ -29,6 +30,15 @@
         <input type="hidden" id="user_id" value="{{profile.id}}">
         <div id="posts-container">
         </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" id="previous-page"><a class="page-link" href="{% url 'profile' user_id=profile.id page_id=page_idMinusOne %}">Previous</a></li>
+                <li class="page-item" id="first-page"><a class="page-link" href="{% url 'profile' user_id=profile.id page_id=1 %}">1</a></li>
+                <li class="page-item" id="second-page"><a class="page-link" href="{% url 'profile' user_id=profile.id page_id=2 %}">2</a></li>
+                <li class="page-item" id="third-page"><a class="page-link" href="{% url 'profile' user_id=profile.id page_id=3 %}">3</a></li>
+                <li class="page-item" id="next-page"><a class="page-link" href="{% url 'profile' user_id=profile.id page_id=page_idPlusOne %}">Next</a></li>
+            </ul>
+        </nav>
     </div>
 {% endblock %}
 
