@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.paginator import Paginator
 
 from .models import User, Post
 
@@ -110,3 +111,26 @@ def following(request):
         if not request.user.is_authenticated:
             return redirect("index")
         return render(request, "network/following.html")
+
+@csrf_exempt 
+def paginate(request):
+    data = json.loads(request.body)
+    paginator = Paginator(data.get("postList", ""), 10)
+    page = paginator.page(int(data.get("page_id", "")))
+    try:
+        next_page_number = page.next_page_number()
+    except:
+        next_page_number = "None"
+    try:
+        previous_page_number = page.previous_page_number()
+    except:
+        previous_page_number = "None"
+    serializedPage = {
+        "str": str(page),
+        "list": page.object_list,
+        "hasNext": page.has_next(),
+        "hasPrevious": page.has_previous(),
+        "nextPageNumber": next_page_number,
+        "previousPageNumber": previous_page_number
+    }
+    return JsonResponse(serializedPage)

@@ -13,4 +13,5 @@ urlpatterns = [
 
     # API Routes
     path("posts", views.posts, name="posts"),
+    path("paginate", views.paginate, name="paginate"),
 ]

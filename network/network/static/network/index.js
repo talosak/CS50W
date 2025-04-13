@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+    
+    var page_id = 1
+    
     document.querySelector('#create-post-form').addEventListener('submit', createPost);
 
     document.querySelector('#create-post-submit').disabled = true;
@@ -15,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#create-post-submit').disabled = true;
     }
 
-    renderPosts();
+    renderPosts(page_id);
 
 });
 
@@ -36,36 +38,47 @@ function createPost(event) {
     document.querySelector('#create-post-content').value = '';
 }
 
-function renderPosts() {
+function renderPosts(page_id) {
     // Get posts
     fetch('/posts')
     .then(response => response.json())
     .then(posts => {
-        // Render posts
-        posts.forEach(post => {
-            let div = document.createElement('div');
-            div.classList.add("p-3", "my-2", "border", "border-secondary");
-            let usernameElement = document.createElement('h3');
-            usernameElement.innerHTML = `<strong>${post.creator.username}</strong>`;
-            usernameElement.style.cursor = 'pointer';
-            usernameElement.addEventListener('click', () => {
-                baseUrl = document.querySelector("#data").dataset.baseUrl;
-                window.location.href = baseUrl.replace("0", post.creator.id);
-            });
-            div.append(usernameElement);
-            let contentElement = document.createElement('h4');
-            contentElement.innerHTML = `${post.content}`;
-            div.append(contentElement);
-            let timestampElement =  document.createElement('h4');
-            timestampElement.innerHTML = `${post.timestamp}`;
-            div.append(timestampElement);
-            let likesElement = document.createElement('div');
-            likesElement.classList.add("p-1", "border", "border-secondary");
-            likesElement.style = "font-size:120%;width:fit-content;";
-            likesElement.innerHTML = `Likes: ${post.likers.length}`;
-            div.append(likesElement);
+        // Paginate posts
+        fetch('/paginate', {
+            method: "POST",
+            body: JSON.stringify({
+                "postList": posts,
+                "page_id": page_id,
+            })
+        })
+        .then(response => response.json())
+        .then(paginatedPosts => {
+            // Render posts
+            paginatedPosts.list.forEach(post => {
+                let div = document.createElement('div');
+                div.classList.add("p-3", "my-2", "border", "border-secondary");
+                let usernameElement = document.createElement('h3');
+                usernameElement.innerHTML = `<strong>${post.creator.username}</strong>`;
+                usernameElement.style.cursor = 'pointer';
+                usernameElement.addEventListener('click', () => {
+                    baseUrl = document.querySelector("#data").dataset.baseUrl;
+                    window.location.href = baseUrl.replace("0", post.creator.id);
+                });
+                div.append(usernameElement);
+                let contentElement = document.createElement('h4');
+                contentElement.innerHTML = `${post.content}`;
+                div.append(contentElement);
+                let timestampElement =  document.createElement('h4');
+                timestampElement.innerHTML = `${post.timestamp}`;
+                div.append(timestampElement);
+                let likesElement = document.createElement('div');
+                likesElement.classList.add("p-1", "border", "border-secondary");
+                likesElement.style = "font-size:120%;width:fit-content;";
+                likesElement.innerHTML = `Likes: ${post.likers.length}`;
+                div.append(likesElement);
 
-            document.querySelector('#posts-container').append(div);  
-        }); 
+                document.querySelector('#posts-container').append(div);  
+            });
+        });     
     });
 }
