@@ -13,7 +13,7 @@
             <h2 class="mt-2 ml-4">Followers: {{profile.followerCount}}</h2>
             <h2 class="mt-2 ml-4">Following: {{profile.followedUserCount}}</h2>
             <input type="hidden" id="page_id" value="{{page_id}}">
-            {% if request.user.id is profile.id %}
+            {% if request.user.id is profile.id or not user.is_authenticated %}
             {% elif request.user not in profile.followers.all %}
                 <form action="{% url 'profile' user_id=profile.id %}" method="post">
                     {% csrf_token %}

@@ -153,3 +153,23 @@ def paginate(request):
         "pageCount": paginator.num_pages,
     }
     return JsonResponse(serializedPage)
+
+@csrf_exempt
+def like(request):
+    data = json.loads(request.body)
+    post_id = data.get("post_id", "")
+    user_id = data.get("user_id", "")
+    post = Post.objects.get(pk=post_id)
+    post.likers.add(user_id)
+    post.save()
+    return JsonResponse({"message": "Post liked successfully."}, status=201)
+
+@csrf_exempt
+def unlike(request):
+    data = json.loads(request.body)
+    post_id = data.get("post_id", "")
+    user_id = data.get("user_id", "")
+    post = Post.objects.get(pk=post_id)
+    post.likers.remove(user_id)
+    post.save()
+    return JsonResponse({"message": "Post liked successfully."}, status=201)

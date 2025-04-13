@@ -2,12 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     var page_id = document.querySelector('#page_id').value
     var currentUser_id = document.querySelector('#current-user-id').value
+    var is_authenticated = document.querySelector('#current-user-authentication').value
     
     document.querySelector('#create-post-form').addEventListener('submit', createPost);
 
     document.querySelector('#create-post-submit').disabled = true;
     document.querySelector('#create-post-content').onkeyup = () => {
-        if (document.querySelector('#create-post-content').value.length > 0) {
+        if (document.querySelector('#create-post-content').value.length > 0 && is_authenticated === "True") {
             document.querySelector('#create-post-submit').disabled = false;
         } else {
             document.querySelector('#create-post-submit').disabled = true;
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#create-post-submit').disabled = true;
     }
 
-    renderPosts(page_id, currentUser_id);
+    renderPosts(page_id, currentUser_id, is_authenticated);
 
 });
 
@@ -39,7 +40,7 @@ function createPost(event) {
     document.querySelector('#create-post-content').value = '';
 }
 
-function renderPosts(page_id, currentUser_id) {
+function renderPosts(page_id, currentUser_id, is_authenticated) {
     // Get posts
     fetch('/posts')
     .then(response => response.json())
@@ -67,6 +68,7 @@ function renderPosts(page_id, currentUser_id) {
                 });
                 let editElement = document.createElement('h4');
                 editElement.innerHTML = `<span style="color:dodgerblue;">Edit</span>`;
+                editElement.style.cursor = 'pointer';
                 let editAreaElement = document.createElement('div');
                 let editPostForm = document.createElement('form');
                 let editPostTextarea = document.createElement('textarea');
@@ -89,6 +91,29 @@ function renderPosts(page_id, currentUser_id) {
                 likesElement.classList.add("p-1", "border", "border-secondary");
                 likesElement.style = "font-size:120%;width:fit-content;";
                 likesElement.innerHTML = `Likes: ${post.likers.length}`;
+                if (post.likers.includes(parseInt(currentUser_id))) {
+                    likesElement.style.fontWeight = 'bold';
+                    likesElement.style.backgroundColor = 'lightgray';
+                } else {
+                    likesElement.style.fontWeight = 'normal';
+                    likesElement.style.backgroundColor = 'white';
+                }
+                if (is_authenticated === "True") {
+                    likesElement.style.cursor = 'pointer';
+                    likesElement.addEventListener('click', () => {
+                        if (post.likers.includes(parseInt(currentUser_id))) {
+                            likesElement.style.fontWeight = 'normal';
+                            likesElement.style.backgroundColor = 'white';
+                            likesElement.innerHTML = `Likes: ${post.likers.length - 1}`;
+                            unlike(post.id, currentUser_id);
+                        } else {
+                            likesElement.style.fontWeight = 'bold';
+                            likesElement.style.backgroundColor = 'lightgray';
+                            likesElement.innerHTML = `Likes: ${post.likers.length + 1}`;
+                            like(post.id, currentUser_id);
+                        }
+                    });
+                }
                 editElement.addEventListener('click', () => {
                     editAreaElement.style.display = 'block';
                     editElement.innerHTML = '';
@@ -142,6 +167,32 @@ function renderPosts(page_id, currentUser_id) {
     });
 }
 
-function editPost(event) {
-    event.preventDefault();
+function like(post_id, currentUser_id) {
+    fetch('/like', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'PUT',
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            post_id: post_id,
+            user_id: currentUser_id,
+        })
+    })
+    .then(response => response.json());
+}
+
+function unlike(post_id, currentUser_id) {
+    fetch('/unlike', {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: 'PUT',
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            post_id: post_id,
+            user_id: currentUser_id,
+        })
+    })
+    .then(response => response.json());
 }

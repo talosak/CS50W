@@ -45,6 +45,7 @@
         
         <div class="body">
             <input type="hidden" id="current-user-id" value="{{request.user.id}}">
+            <input type="hidden" id="current-user-authentication" value="{{user.is_authenticated}}">
             {% block body %}
             {% endblock %}
         </div>
