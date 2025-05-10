@@ -1,0 +1,13 @@
+/* Default (dark) color theme */
+:root {
+    --dynamic-pink: #cc10cc;
+}
+
+/* Light color theme */
+[data-bs-theme="light"] {
+    --dynamic-pink: #ffaaff;
+}
+
+.color-pink {
+    color: var(--dynamic-pink);
+}

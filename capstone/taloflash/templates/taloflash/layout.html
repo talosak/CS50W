@@ -9,14 +9,14 @@
         <link href="{% static 'taloflash/styles.css' %}" rel="stylesheet">
         {% block script %}{% endblock %}
     </head>
-    <body>
+    <body data-bs-theme="dark">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">NO COLLAPSE</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#meow" aria-controls="meow" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapsible">
                 <span class="navbar-toggler-icon"></span>
             </button>
-                <div class="collapse navbar-collapse" id="meow">
+                <div class="collapse navbar-collapse" id="navbarCollapsible">
                     YES COLLAPSE
                 </div>
             </div>
