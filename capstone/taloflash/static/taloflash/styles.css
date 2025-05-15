@@ -1,6 +1,10 @@
 /* Default (dark) color theme */
 :root {
     --dynamic-pink: #cc10cc;
+    --dynamic-blue: #00cdfd;
+    --light-blue: #00cdfd;
+    --regular-blue: #4174fe;
+    --dark-blue: #103fff;
 }
 
 /* Light color theme */
