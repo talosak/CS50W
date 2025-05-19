@@ -1,17 +1,40 @@
 /* Default (dark) color theme */
 :root {
-    --dynamic-pink: #cc10cc;
+    --dynamic-pink: #ffaaff;
     --dynamic-blue: #00cdfd;
+    --dynamic-blue-highlight: #80ffff;
+    --dynamic-blue-muted: #225577;
     --light-blue: #00cdfd;
     --regular-blue: #4174fe;
     --dark-blue: #103fff;
+    font-size: 20px;
 }
 
 /* Light color theme */
 [data-bs-theme="light"] {
-    --dynamic-pink: #ffaaff;
+    background-color: #dddddd;
+    --dynamic-pink: #cc10cc;
+    --dynamic-blue: var(--dark-blue);
+    --dynamic-blue-highlight: #000077;
+    --dynamic-blue-muted: #5599ff;
 }
 
-.color-pink {
+.color-pink-text {
     color: var(--dynamic-pink);
+}
+
+.dynamic-blue-text {
+    color: var(--dynamic-blue);
+}
+
+.blue-nav-link {
+    color: var(--dynamic-blue);
+}
+
+.blue-nav-link:hover {
+    color: var(--dynamic-blue-highlight);
+}
+
+.blue-border {
+    border-color: var(--dynamic-blue-muted) !important;
 }
