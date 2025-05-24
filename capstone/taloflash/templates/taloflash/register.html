@@ -5,5 +5,22 @@
 {% block script %}{% endblock %}
 
 {% block body %}
-    Hello, register
+    <div class="container-lg">
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label" for="registerUsernameForm">Username:</label>
+                <input type="text" name="username" class="form-control input-blue" id="registerUsernameForm">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="registerPasswordForm">Password:</label>
+                <input type="password" name="password" class="form-control input-blue" id="registerPasswordForm">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="registerConfirmationForm">Confirm Password:</label>
+                <input type="password" name="confirmation" class="form-control input-blue" id="registerConfirmationForm">
+            </div>
+            <button type="submit" class="btn btn-custom-blue">Register</button>
+        </form>
+    </div>
 {% endblock %}

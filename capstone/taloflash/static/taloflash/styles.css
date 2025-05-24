@@ -1,26 +1,23 @@
 /* Default (dark) color theme */
 :root {
-    --dynamic-pink: #ffaaff;
+    --custom-blue: #4174fe;
     --dynamic-blue: #00cdfd;
+    --dynamic-blue-bg: #212550;
     --dynamic-blue-highlight: #80ffff;
     --dynamic-blue-muted: #225577;
-    --light-blue: #00cdfd;
-    --regular-blue: #4174fe;
-    --dark-blue: #103fff;
     font-size: 20px;
+}
+
+main {
+    font-size: 26px;
 }
 
 /* Light color theme */
 [data-bs-theme="light"] {
-    background-color: #dddddd;
-    --dynamic-pink: #cc10cc;
-    --dynamic-blue: var(--dark-blue);
+    --dynamic-blue: #103fff;
     --dynamic-blue-highlight: #000077;
     --dynamic-blue-muted: #5599ff;
-}
-
-.color-pink-text {
-    color: var(--dynamic-pink);
+    --dynamic-blue-bg: #eeeeff;
 }
 
 .dynamic-blue-text {
@@ -35,6 +32,26 @@
     color: var(--dynamic-blue-highlight);
 }
 
-.blue-border {
+.blue-bottom-border {
     border-color: var(--dynamic-blue-muted) !important;
+}
+
+.btn-custom-blue {
+    font-size: 26px;
+    color: var(--dynamic-blue);
+    border: 1px var(--custom-blue) solid;
+    background-color: var(--dynamic-blue-bg);
+}
+
+.btn-custom-blue:hover {
+    color: var(--dynamic-blue-highlight);
+    background-color: var(--custom-blue);
+}
+
+.input-blue {
+    border: 1px var(--custom-blue) solid;
+}
+
+.input-blue:focus {
+    border: 1px var(--custom-blue) solid;
 }
