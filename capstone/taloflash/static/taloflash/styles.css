@@ -5,6 +5,12 @@
     --dynamic-blue-bg: #212550;
     --dynamic-blue-highlight: #80ffff;
     --dynamic-blue-muted: #225577;
+    --alert-success-bg: #153714;
+    --alert-success-border-color: #20a231;
+    --alert-success-text-color: #20cc31;
+    --alert-danger-bg: #371415;
+    --alert-danger-border-color: #cc3120;
+    --alert-danger-text-color: #a23120;
     font-size: 20px;
 }
 
@@ -18,6 +24,12 @@ main {
     --dynamic-blue-highlight: #000077;
     --dynamic-blue-muted: #5599ff;
     --dynamic-blue-bg: #eeeeff;
+    --alert-success-bg: ;
+    --alert-success-border-color: ;
+    --alert-success-text-color: ;
+    --alert-danger-bg: ;
+    --alert-danger-border-color: ;
+    --alert-danger-text-color: ;
 }
 
 .dynamic-blue-text {
@@ -54,4 +66,18 @@ main {
 
 .input-blue:focus {
     border: 1px var(--custom-blue) solid;
+}
+
+.alert-success {
+    background-color: var(--alert-success-bg);
+    color: var(--alert-success-text-color);
+    border-color: var(--alert-success-border-color);
+    font-size: 22px;
+}
+
+.alert-danger {
+    background-color: var(--alert-danger-bg);
+    color: var(--alert-danger-text-color);
+    border-color: var(--alert-danger-border-color);
+    font-size: 22px;
 }
