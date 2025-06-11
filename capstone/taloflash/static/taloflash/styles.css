@@ -32,6 +32,11 @@ main {
     --alert-danger-text-color: ;
 }
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 .dynamic-blue-text {
     color: var(--dynamic-blue);
 }

@@ -17,11 +17,9 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapsible"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarCollapsible">
                     <ul class="me-auto navbar-nav dynamic-blue-text">
-                        {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Create Set</a></li>
-                        {% endif %}
                         <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'index' %}">All Sets</a></li>
                         {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Create Set</a></li>
                             <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Saved</a></li>
                         {% endif %}
                         <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Search</a></li>
@@ -37,10 +35,24 @@
                 </div>
             </div>
         </nav>
-        {% if message %}
-            <div>{{message}}</div>
-        {% endif %}
+
         <main class="m-2 container-fluid">
+            <div class="container-lg">
+                {% if messageSuccess %}
+                    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                        <span>{{messageSuccess}}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                {% if messageError %}
+                    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                        <span>{{messageError}}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            </div>
+            
             {% block body %}{% endblock %}
         </main>
     </body>
