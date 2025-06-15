@@ -77,12 +77,12 @@ html, body {
     background-color: var(--alert-success-bg);
     color: var(--alert-success-text-color);
     border-color: var(--alert-success-border-color);
-    font-size: 22px;
+    font-size: 30px;
 }
 
-.alert-danger {
+.alert-error {
     background-color: var(--alert-danger-bg);
     color: var(--alert-danger-text-color);
     border-color: var(--alert-danger-border-color);
-    font-size: 22px;
+    font-size: 30px;
 }
