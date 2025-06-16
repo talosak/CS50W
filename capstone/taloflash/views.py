@@ -2,11 +2,30 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.contrib import messages
+from django.db.models import Count
 
 from .models import User, FlashSet, Flashcard, Settings
 
 def index(request):
-    return render(request, "taloflash/index.html")
+    # Order the sets while checking if user is logged in
+    try:
+        if request.user.settings.flashSetDisplayOrder == "likes":
+            order = "-likeCount"
+        elif request.user.settings.flashSetDisplayOrder == "name":
+            order = "name"
+        elif request.user.settings.flashSetDisplayOrder == "newest":
+            order = "-timestamp"
+        elif request.user.settings.flashSetDisplayOrder == "creator":
+            order = "-creator__name"
+        else:
+            order = "-likeCount"
+    except AttributeError:
+        order = "-likeCount"
+
+    sets = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).order_by(order).all()
+    return render(request, "taloflash/index.html", {
+        "sets": sets,
+    })
 
 def createSet(request):
     if request.method == "POST":
@@ -71,6 +90,10 @@ def register_view(request):
             messages.error(request, "Username already taken")
             return render(request, "network/register.html")
         
+        # Create settings
+        settings = Settings(user=user)
+        settings.save()
+
         login(request, user)
         messages.success(request, "Registered successfully")
         return redirect("index")

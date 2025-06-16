@@ -86,3 +86,9 @@ html, body {
     border-color: var(--alert-danger-border-color);
     font-size: 30px;
 }
+
+.flashset {
+    border: 2px solid var(--dynamic-blue-muted);
+    background-color: var(--dynamic-blue-bg);
+    border-radius: 25px;
+}
