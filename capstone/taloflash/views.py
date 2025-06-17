@@ -7,7 +7,7 @@ from django.db.models import Count
 from .models import User, FlashSet, Flashcard, Settings
 
 def index(request):
-    # Order the sets while checking if user is logged in
+    # Order the flashsets while checking if user is logged in
     try:
         if request.user.settings.flashSetDisplayOrder == "likes":
             order = "-likeCount"
@@ -22,9 +22,9 @@ def index(request):
     except AttributeError:
         order = "-likeCount"
 
-    sets = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).order_by(order).all()
+    flashsets = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).order_by(order).all()
     return render(request, "taloflash/index.html", {
-        "sets": sets,
+        "flashsets": flashsets,
     })
 
 def createSet(request):
@@ -33,11 +33,11 @@ def createSet(request):
         name = request.POST["name"]
         description = request.POST["description"]
 
-        # Create the set
-        set = FlashSet(creator=creator, name=name, description=description)
-        set.save()
-        set.editors.add(creator)
-        set.save()
+        # Create the flashset
+        flashset = FlashSet(creator=creator, name=name, description=description)
+        flashset.save()
+        flashset.editors.add(creator)
+        flashset.save()
         messages.success(request, "Set created successfully")
         return redirect("index")
     else:
@@ -105,3 +105,10 @@ def register_view(request):
 
     else:
         return render(request, "taloflash/register.html")
+
+def set_view(request, set_id):
+    flashset = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).get(pk=set_id)
+    flashcards = 0
+    return render(request, "taloflash/flashset.html", {
+        "flashset": flashset,
+    })

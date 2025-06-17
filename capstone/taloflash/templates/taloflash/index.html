@@ -7,7 +7,7 @@
 {% block body %}
     <div class="container-lg">
         {% for set in sets %}
-            <a href="#" style="color:currentColor; text-decoration:none;">
+            <a href="{% url 'set' set_id=set.id %}" style="color:currentColor; text-decoration:none;">
                 <div class="container-fluid my-2 flashset">
                     <h2><strong>{{set.name}}</strong></h2>
                     <h5>Creator: {{set.creator.username}}</h5>
