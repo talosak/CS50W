@@ -18,14 +18,21 @@ def index(request):
         elif request.user.settings.flashSetDisplayOrder == "creator":
             order = "-creator__name"
         else:
-            order = "-likeCount"
+            order = "-timestamp"
     except AttributeError:
-        order = "-likeCount"
+        order = "-timestamp"
 
     flashsets = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).order_by(order).all()
     return render(request, "taloflash/index.html", {
-        "flashsets": flashsets,
+        "sets": flashsets,
     })
+
+def createFlashcard(request, set_id):
+    if request.method == "POST":
+        pass
+    else:
+        return render(request, "taloflash/createFlashcard.html")
+    
 
 def createSet(request):
     if request.method == "POST":

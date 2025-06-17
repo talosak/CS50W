@@ -29,7 +29,7 @@ class Flashcard(models.Model):
 class Settings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="settings")
     theme = models.CharField(default="dark", choices=[("dark", "Dark"), ("light", "Light")], max_length=63)
-    flashSetDisplayOrder = models.CharField(default="likes", choices=[("likes", "Most liked"), ("name", "Name"), ("newest", "Newest"), ("creator", "Creator's name")], max_length=63)
+    flashSetDisplayOrder = models.CharField(default="newest", choices=[("likes", "Most liked"), ("name", "Name"), ("newest", "Newest"), ("creator", "Creator's name")], max_length=63)
     flashcardDisplayOrder = models.CharField(default="random", choices=[("random", "Random"), ("ordered", "Ordered")], max_length=63)
     flashcardFontSize = models.IntegerField(default=16)
     showTimer = models.BooleanField(default=False)
