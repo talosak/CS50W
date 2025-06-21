@@ -11,6 +11,7 @@
     --alert-danger-bg: #371415;
     --alert-danger-border-color: #cc3120;
     --alert-danger-text-color: #a23120;
+    --alert-danger-highlight: #ff9999;
     font-size: 20px;
 }
 
@@ -23,13 +24,14 @@ main {
     --dynamic-blue: #103fff;
     --dynamic-blue-highlight: #000077;
     --dynamic-blue-muted: #5599ff;
-    --dynamic-blue-bg: #eeeeff;
-    --alert-success-bg: ;
-    --alert-success-border-color: ;
-    --alert-success-text-color: ;
-    --alert-danger-bg: ;
-    --alert-danger-border-color: ;
-    --alert-danger-text-color: ;
+    --dynamic-blue-bg: #ddddff;
+    --alert-success-bg: #ddffdd;
+    --alert-success-border-color: #20a231;
+    --alert-success-text-color: #207731;
+    --alert-danger-bg: #ffdddd;
+    --alert-danger-border-color: #cc3120;
+    --alert-danger-text-color: #773120;
+    --alert-danger-highlight: #770000;
 }
 
 html, body {
@@ -91,4 +93,16 @@ html, body {
     border: 2px solid var(--dynamic-blue-muted);
     background-color: var(--dynamic-blue-bg);
     border-radius: 25px;
+}
+
+.btn-custom-danger {
+    font-size: 26px;
+    color: var(--alert-danger-text-color);
+    border: 1px var(--alert-danger-border-color) solid;
+    background-color: var(--alert-danger-bg);
+}
+
+.btn-custom-danger:hover {
+    color: var(--alert-danger-highlight);
+    background-color: var(--alert-danger-border-color);
 }

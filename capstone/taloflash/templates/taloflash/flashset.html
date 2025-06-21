@@ -1,12 +1,46 @@
 {% extends "taloflash/layout.html" %}
+{% load static %}
 
 {% block title %} All Sets {% endblock %}
 
-{% block script %}{% endblock %}
+{% block script %}
+    <script src="{% static 'taloflash/flashset.js' %}"></script>
+{% endblock %}
 
 {% block body %}
     <div class="container-lg">
-        <a href="#" class="btn btn-custom-blue">Create Flashcard</a>
-        <h2>Set_id: {{flashset.id}}</h2>
+        <h2>{{flashset.name}}</h2>
+        <a href="{% url 'createFlashcard' set_id=flashset.id %}" class="btn btn-custom-blue">Create Flashcard</a>
+        <button type="button" class="btn btn-custom-danger" data-bs-toggle="modal" data-bs-target="#deleteFlashsetConfirmation">Delete Set</button>
+        <div class="modal fade" id="deleteFlashsetConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title" style="font-size:22px">Are you sure you would like to delete this set?</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form method="post" action="{% url 'set' set_id=flashset.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" id="deleteFlashsetConfirmationButton">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% for flashcard in flashcards %}
+            <div style="color:currentColor; text-decoration:none;" class="container-fluid my-2 flashset">
+                <div class="row my-3">
+                    <div class="col-auto">
+                        <img src="{{flashcard.imageURL}}" style="object-fit:contain; max-height:300px;" >
+                    </div>
+                    <div class="col-auto">
+                        <h2><strong>{{flashcard.front}}</strong></h2>
+                        <h4>{{flashcard.back}}</h4>
+                        <h6>Created by: {{flashcard.creator.username}}</h6>
+                    </div>
+                </div>  
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

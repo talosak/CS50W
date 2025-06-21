@@ -29,9 +29,28 @@ def index(request):
 
 def createFlashcard(request, set_id):
     if request.method == "POST":
-        pass
+        flashset = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).get(pk=set_id)
+        creator = request.user
+        front = request.POST["front"]
+        back = request.POST["back"]
+        imageURL = request.POST["imageURL"]
+
+        # Ensure both sides aren't blank
+        if front == "" or back == "":
+            messages.error(request, "Both sides of the flashcard must be inputted")
+            return render(request, "taloflash/createFlashcard.html", {
+                "flashset": flashset,
+            })
+        
+        flashcard = Flashcard(creator=creator, front=front, back=back, imageURL=imageURL, flashSet_id=flashset.id)
+        flashcard.save()
+        messages.success(request, "Flashcard created successfully")
+        return redirect("set", set_id=set_id)
     else:
-        return render(request, "taloflash/createFlashcard.html")
+        flashset = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).get(pk=set_id)
+        return render(request, "taloflash/createFlashcard.html", {
+            "flashset": flashset,
+        })
     
 
 def createSet(request):
@@ -39,6 +58,11 @@ def createSet(request):
         creator = request.user
         name = request.POST["name"]
         description = request.POST["description"]
+
+        # Ensure name isn't blank
+        if name == "":
+            messages.error(request, "FlashSet's name is missing")
+            return render(request, "taloflash/createSet.html")
 
         # Create the flashset
         flashset = FlashSet(creator=creator, name=name, description=description)
@@ -114,8 +138,16 @@ def register_view(request):
         return render(request, "taloflash/register.html")
 
 def set_view(request, set_id):
-    flashset = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).get(pk=set_id)
-    flashcards = 0
-    return render(request, "taloflash/flashset.html", {
-        "flashset": flashset,
-    })
+        if request.method == "POST":
+            # Delete Flashset
+            flashset = FlashSet.objects.get(pk=set_id)
+            flashset.delete()
+            messages.success(request, "Set deleted successfully")
+            return redirect("index")
+        else:
+            flashset = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).get(pk=set_id)
+            flashcards = Flashcard.objects.filter(flashSet=flashset).all()
+            return render(request, "taloflash/flashset.html", {
+                "flashset": flashset,
+                "flashcards": flashcards,
+            })
