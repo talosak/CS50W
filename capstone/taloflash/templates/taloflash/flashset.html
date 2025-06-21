@@ -4,7 +4,8 @@
 {% block title %} All Sets {% endblock %}
 
 {% block script %}
-    <script src="{% static 'taloflash/flashset.js' %}"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
+    <script defer src="{% static 'taloflash/flashset.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -31,7 +32,7 @@
             </div>
         {% endif %}
         {% for flashcard in flashcards %}
-            <div style="color:currentColor; text-decoration:none;" class="container-fluid my-2 flashset">
+            <div style="color:currentColor; text-decoration:none;" class="container-fluid my-2 flashset" id="flashcard-{{flashcard.id}}">
                 <div class="row my-3">
                     <div class="col-auto">
                         <img src="{{flashcard.imageURL}}" style="object-fit:contain; max-height:300px;" >
@@ -46,8 +47,9 @@
                             <div class="row align-items-start justify-content-end mb-auto mt-3">
                                 <button type="button" class="btn btn-primary" style="font-size:26px;">Edit</button>
                             </div>
-                            <div class="row align-items-end justify-content-end mb-3">
-                                <button type="button" class="btn btn-custom-danger">Delete</button> 
+                            <div class="row align-items-end justify-content-end mb-3 mt-2">
+                                
+                                <button type="button" class="btn btn-custom-danger" onclick="deleteFlashcard({{flashcard.id}}, {{flashset.id}})">Delete</button>
                             </div>
                         </div>
                     {% endif %}

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.contrib import messages
 from django.db.models import Count
+from django.http import JsonResponse
 
 from .models import User, FlashSet, Flashcard, Settings
 
@@ -26,6 +27,15 @@ def index(request):
     return render(request, "taloflash/index.html", {
         "sets": flashsets,
     })
+
+def alterFlashcard(request, set_id, flashcard_id):
+    if request.method == "DELETE":
+        # Delete flashcard
+        flashcard = Flashcard.objects.get(pk=flashcard_id)
+        flashcard.delete()
+        return JsonResponse({"message": "Flashcard deleted successfully"}, status=201)
+    elif request.method == "PUT":
+        pass
 
 def createFlashcard(request, set_id):
     if request.method == "POST":
