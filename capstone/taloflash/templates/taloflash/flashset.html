@@ -35,20 +35,36 @@
             <div style="color:currentColor; text-decoration:none;" class="container-fluid my-2 flashset" id="flashcard-{{flashcard.id}}">
                 <div class="row my-3">
                     <div class="col-auto">
-                        <img src="{{flashcard.imageURL}}" style="object-fit:contain; max-height:300px;" >
+                        <img src="{{flashcard.imageURL}}" id="flashcard-image-{{flashcard.id}}" style="object-fit:contain; max-height:200px; max-width:400px;">
                     </div>
-                    <div class="col-auto">
-                        <h2><strong>{{flashcard.front}}</strong></h2>
-                        <h4>{{flashcard.back}}</h4>
-                        <h6>Created by: {{flashcard.creator.username}}</h6>
+                    <div class="col-4">
+                        <div class="d-block" id="flashcard-base-{{flashcard.id}}">
+                            <h2><strong id="flashcard-front-{{flashcard.id}}">{{flashcard.front}}</strong></h2>
+                            <h4 id="flashcard-back-{{flashcard.id}}">{{flashcard.back}}</h4>
+                            <h6 id="flashcard-username-{{flashcard.id}}">Created by: {{flashcard.creator.username}}</h6>
+                        </div>
+                        <div class="d-none" id="flashcard-edit-form-{{flashcard.id}}">
+                            <div class="mb-2">
+                                <span class="form-label" for="createFlashcardFrontForm">Front side:</label>
+                                <input type="text" name="front" class="form-control input-blue" id="flashcard-edit-front-{{flashcard.id}}" value="{{flashcard.front}}">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="createFlashcardBackForm">Back side:</label>
+                                <input type="text" name="back" class="form-control input-blue" id="flashcard-edit-back-{{flashcard.id}}" value="{{flashcard.back}}">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="createFlashcardImageURLForm">Image URL: (optional)</label>
+                                <input type="url" name="imageURL" class="form-control input-blue" id="flashcard-edit-imageURL-{{flashcard.id}}" value="{{flashcard.imageURL}}">
+                            </div>
+                            <button type="button" class="btn btn-primary" style="font-size:26px;" onclick="saveFlashcardEdit({{flashcard.id}}, {{flashset.id}})">Save Changes</button>
+                        </div>
                     </div>
                     {% if user in flashset.editors.all %}
                         <div class="col-auto ms-auto me-4 d-flex flex-column">
                             <div class="row align-items-start justify-content-end mb-auto mt-3">
-                                <button type="button" class="btn btn-primary" style="font-size:26px;">Edit</button>
+                                <button type="button" class="btn btn-primary" style="font-size:26px;" onclick="displayEditFlashcard({{flashcard.id}}, {{flashset.id}})">Edit</button>
                             </div>
                             <div class="row align-items-end justify-content-end mb-3 mt-2">
-                                
                                 <button type="button" class="btn btn-custom-danger" onclick="deleteFlashcard({{flashcard.id}}, {{flashset.id}})">Delete</button>
                             </div>
                         </div>

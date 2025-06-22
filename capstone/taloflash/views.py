@@ -4,6 +4,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.db.models import Count
 from django.http import JsonResponse
+import json
 
 from .models import User, FlashSet, Flashcard, Settings
 
@@ -35,7 +36,17 @@ def alterFlashcard(request, set_id, flashcard_id):
         flashcard.delete()
         return JsonResponse({"message": "Flashcard deleted successfully"}, status=201)
     elif request.method == "PUT":
-        pass
+        # Replace old values with edited ones
+        data = json.loads(request.body)
+        flashcard = Flashcard.objects.get(pk=flashcard_id)
+        newFront = data.get("newFront", "")
+        newBack = data.get("newBack", "")
+        newImageURL = data.get("newImageURL", "")
+        flashcard.front = newFront
+        flashcard.back = newBack
+        flashcard.imageURL = newImageURL
+        flashcard.save()
+        return JsonResponse({"message": "Flashcard edited successfully"}, status=201)
 
 def createFlashcard(request, set_id):
     if request.method == "POST":
