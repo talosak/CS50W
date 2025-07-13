@@ -24,7 +24,7 @@ def index(request):
     except AttributeError:
         order = "-timestamp"
 
-    flashsets = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).order_by(order).all()
+    flashsets = FlashSet.objects.annotate(likeCount=Count("likers", distinct=True), flashcardCount=Count("flashcards", distinct=True)).order_by(order).all()
     return render(request, "taloflash/index.html", {
         "sets": flashsets,
     })
@@ -47,6 +47,30 @@ def alterFlashcard(request, set_id, flashcard_id):
         flashcard.imageURL = newImageURL
         flashcard.save()
         return JsonResponse({"message": "Flashcard edited successfully"}, status=201)
+    
+def alterSet(request, set_id):
+    data = json.loads(request.body)
+    flashset = FlashSet.objects.get(pk=set_id)
+    action = data.get("action", "")
+    if action == "like":
+        flashset.likers.add(request.user)
+        flashset.save()
+        return JsonResponse({"message": "FlashSet liked successfully"}, status=201)
+    elif action == "unlike":
+        flashset.likers.remove(request.user)
+        flashset.save()
+        return JsonResponse({"message": "FlashSet unliked successfully"}, status=201)
+    elif action == "save":
+        flashset.savers.add(request.user)
+        flashset.save()
+        return JsonResponse({"message": "FlashSet saved successfully"}, status=201)
+    elif action == "unsave":
+        flashset.savers.remove(request.user)  
+        flashset.save()
+        return JsonResponse({"message": "FlashSet unsaved successfully"}, status=201)  
+    else:
+        return JsonResponse({"message": "Invalid action for alterSet"}, status=500)
+
 
 def createFlashcard(request, set_id):
     if request.method == "POST":
@@ -72,7 +96,6 @@ def createFlashcard(request, set_id):
         return render(request, "taloflash/createFlashcard.html", {
             "flashset": flashset,
         })
-    
 
 def createSet(request):
     if request.method == "POST":

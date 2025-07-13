@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("sets/<int:set_id>/alterFlashcard/<int:flashcard_id>", views.alterFlashcard, name="alterFlashcard"),
+    path("sets/alterSet/<int:set_id>", views.alterSet, name="alterSet"),
     path("sets/<int:set_id>/createFlashcard", views.createFlashcard, name="createFlashcard"),
     path("createSet", views.createSet, name="createSet"),
     path("login", views.login_view, name="login"),

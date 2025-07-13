@@ -12,7 +12,9 @@
 {% block body %}
     <div class="container-lg">
         <h2>{{flashset.name}}</h2>
-        <a href="{% url 'createFlashcard' set_id=flashset.id %}" class="btn btn-custom-blue">Create Flashcard</a>
+        {% if user in flashset.editors.all %}        
+           <a href="{% url 'createFlashcard' set_id=flashset.id %}" class="btn btn-custom-blue">Create Flashcard</a>
+        {% endif %}
         {% if user == flashset.creator %}
             <button type="button" class="btn btn-custom-danger" data-bs-toggle="modal" data-bs-target="#deleteFlashsetConfirmation">Delete Set</button>
             <div class="modal fade" id="deleteFlashsetConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
