@@ -1,21 +1,34 @@
 {% extends "taloflash/layout.html" %}
+{% load static %}
 
 {% block title %} All Sets {% endblock %}
 
-{% block script %}{% endblock %}
+{% block script %}
+    <script defer src="{% static 'taloflash/index.js' %}"></script>
+{% endblock %}
 
 {% block body %}
     <div class="container-lg">
         {% for set in sets %}
-            <a href="{% url 'set' set_id=set.id %}" style="color:currentColor; text-decoration:none;">
-                <div class="container-fluid my-2 flashset">
+            <div class="container-fluid my-2 flashset">
+                <a href="{% url 'set' set_id=set.id %}" style="color:currentColor; text-decoration:none;">
                     <h2><strong>{{set.name}}</strong></h2>
                     <h5>Creator: {{set.creator.username}}</h5>
                     <h6>{{set.description}}</h6>
                     <h6>Flashcards: {{set.flashcardCount}}</h6>
                     <h6>Likes: {{set.likeCount}}</h6>
-                </div>
-            </a>
+                </a>
+                {% if user not in set.likers.all %}
+                    <button type="button" class="btn btn-primary mb-2 px-2 py-1" id="likeSetButton-{{set.id}}" style="padding:1px;" onclick="likeSet({{set.id}})">Like</button>
+                {% else %}
+                    <button type="button" class="btn btn-secondary mb-2 px-2 py-1" id="likeSetButton-{{set.id}}" style="padding:1px;" onclick="likeSet({{set.id}})">Unlike</button>
+                {% endif %}
+                {% if user not in set.savers.all %}
+                    <button type="button" class="btn btn-primary mb-2 px-2 py-1" id="saveSetButton-{{set.id}}" style="padding:1px;" onclick="saveSet({{set.id}})">Save</button>
+                {% else %}
+                    <button type="button" class="btn btn-secondary mb-2 px-2 py-1" id="likeSetButton-{{set.id}}" style="padding:1px;" onclick="likeSet({{set.id}})">Unsave</button>
+                {% endif %}
+            </div>
         {% endfor %}
     </div>
 {% endblock %}
