@@ -20,7 +20,7 @@
                         <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'index' %}">All Sets</a></li>
                         {% if user.is_authenticated %}
                             <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'createSet' %}">Create Set</a></li>
-                            <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Saved</a></li>
+                            <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'saved' %}">Saved</a></li>
                         {% endif %}
                         <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Search</a></li>
                     </ul>

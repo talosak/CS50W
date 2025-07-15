@@ -1,7 +1,7 @@
 {% extends "taloflash/layout.html" %}
 {% load static %}
 
-{% block title %} All Sets {% endblock %}
+{% block title %} Saved Sets {% endblock %}
 
 {% block script %}
     <script src=" https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js "></script>
@@ -23,11 +23,6 @@
                     <button type="button" class="btn btn-primary mb-2 px-2 py-1" id="likeSetButton-{{set.id}}" style="padding:1px;" onclick="likeSet({{set.id}})">Like</button>
                 {% elif user in set.likers.all and user.is_authenticated%}
                     <button type="button" class="btn btn-secondary mb-2 px-2 py-1" id="likeSetButton-{{set.id}}" style="padding:1px;" onclick="likeSet({{set.id}})">Unlike</button>
-                {% endif %}
-                {% if user not in set.savers.all and user.is_authenticated %}
-                    <button type="button" class="btn btn-primary mb-2 px-2 py-1" id="saveSetButton-{{set.id}}" style="padding:1px;" onclick="saveSet({{set.id}})">Save</button>
-                {% elif user in set.savers.all and user.is_authenticated%}
-                    <button type="button" class="btn btn-secondary mb-2 px-2 py-1" id="saveSetButton-{{set.id}}" style="padding:1px;" onclick="saveSet({{set.id}})">Unsave</button>
                 {% endif %}
             </div>
         {% endfor %}

@@ -142,6 +142,12 @@ def login_view(request):
         return render(request, "taloflash/login.html")
     
 def logout_view(request):
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        messages.success(request, "Not logged in")
+        return redirect("index")
+    
+    # Log user out
     logout(request)
     messages.success(request, "Logged out successfully")
     return redirect("index")
@@ -180,6 +186,30 @@ def register_view(request):
 
     else:
         return render(request, "taloflash/register.html")
+    
+def saved(request):
+    # Check if user is authenticated
+    if not request.user.is_authenticated:
+        messages.success(request, "Not logged in")
+        return redirect("index")
+    
+    # Order the flashsets while checking if user is logged in
+    if request.user.settings.flashSetDisplayOrder == "likes":
+        order = "-likeCount"
+    elif request.user.settings.flashSetDisplayOrder == "name":
+        order = "name"
+    elif request.user.settings.flashSetDisplayOrder == "newest":
+        order = "-timestamp"
+    elif request.user.settings.flashSetDisplayOrder == "creator":
+        order = "-creator__name"
+    else:
+        messages.success(request, "Not logged in")
+        return redirect("index")
+        
+    flashsets = FlashSet.objects.filter(savers=request.user).annotate(likeCount=Count("likers", distinct=True), flashcardCount=Count("flashcards", distinct=True)).order_by(order).all()
+    return render(request, "taloflash/saved.html", {
+        "sets": flashsets,
+    })
 
 def set_view(request, set_id):
         if request.method == "POST":
