@@ -11,11 +11,11 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label class="form-label" for="loginUsernameForm">Username:</label>
-                <input type="text" name="username" class="form-control input-blue" id="loginUsernameForm">
+                <input type="text" name="username" class="form-control input-blue" id="loginUsernameForm" autocomplete="off">
             </div>
             <div class="mb-3">
                 <label class="form-label" for="loginPasswordForm">Password:</label>
-                <input type="password" name="password" class="form-control input-blue" id="loginPasswordForm">
+                <input type="password" name="password" class="form-control input-blue" id="loginPasswordForm" autocomplete="off">
             </div>
             <button type="submit" class="btn btn-custom-blue">Log In</button>
         </form>
