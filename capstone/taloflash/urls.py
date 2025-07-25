@@ -12,5 +12,7 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register_view, name="register"),
     path("saved", views.saved, name="saved"),
+    path("search", views.search, name="search"),
+    path("search/<str:searchQuery>", views.searchResults, name="searchResults"),
     path("sets/<int:set_id>", views.set_view, name="set"),
 ]

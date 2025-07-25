@@ -211,6 +211,24 @@ def saved(request):
         "sets": flashsets,
     })
 
+def search(request):
+    if request.method == "POST":
+        searchQuery = request.POST.get("searchQuery")
+        if searchQuery == "":
+            messages.error(request, "Cannot submit empty search query")
+            return redirect("search")
+        return redirect("searchResults", searchQuery=searchQuery)
+    else:
+        return render(request, "taloflash/search.html")
+    
+def searchResults(request, searchQuery):
+    order = "name"
+    flashsets = FlashSet.objects.filter(name__contains=searchQuery).annotate(likeCount=Count("likers", distinct=True), flashcardCount=Count("flashcards", distinct=True)).order_by(order).all()
+    return render(request, "taloflash/searchResults.html", {
+        "sets": flashsets,
+        "searchQuery": searchQuery,
+    })
+
 def set_view(request, set_id):
         if request.method == "POST":
             # Delete Flashset

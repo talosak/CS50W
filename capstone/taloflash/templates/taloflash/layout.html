@@ -22,7 +22,7 @@
                             <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'createSet' %}">Create Set</a></li>
                             <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'saved' %}">Saved</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Search</a></li>
+                        <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'search' %}">Search</a></li>
                     </ul>
                     <ul class="ms-auto navbar-nav dynamic-blue-text">
                         {% if user.is_authenticated %}
