@@ -29,24 +29,14 @@ class Flashcard(models.Model):
 class Settings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="settings")
     theme = models.CharField(default="dark", choices=[("dark", "Dark"), ("light", "Light")], max_length=63)
-    flashSetDisplayOrder = models.CharField(default="newest", choices=[("likes", "Most liked"), ("name", "Name"), ("newest", "Newest"), ("creator", "Creator's name")], max_length=63)
-    flashcardDisplayOrder = models.CharField(default="random", choices=[("random", "Random"), ("ordered", "Ordered")], max_length=63)
+    flashSetDisplayOrder = models.CharField(default="likes", choices=[("likes", "Most liked"), ("name", "Name"), ("newest", "Newest"), ("creator", "Creator's name")], max_length=63)
+    flashcardDisplayOrder = models.CharField(default="random", choices=[("random", "Random"), ("oldest", "Oldest"), ("alphabeticalFront", "Alphabetical - front side)"), ("alphabeticalBack", "Alphabetical - back side")], max_length=63)
     flashcardFontSize = models.IntegerField(default=16)
     showTimer = models.BooleanField(default=False)
     timeLimit = models.IntegerField(default=0)
-    backToForwardMode = models.BooleanField(default=False)
+    timerBehavior = models.CharField(default="countDown", choices=[("countDown", "Count down"), ("countUp", "Count up")], max_length=63)
+    timeLimitBehavior = models.CharField(default="nothing", choices=[("nothing", "Nothing"), ("show", "Show"), ("kick", "Kick"), ("restart", "Restart")], max_length=63)
     postFlipCooldown = models.FloatField(default=0)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "userID": self.user.id,
-            "theme": self.theme,
-            "flashcardDisplayOrder": self.flashcardDisplayOrder,
-            "flashcardFontSize": self.flashcardFontSize,
-            "showTimer": self.showTimer,
-            "timeLimit": self.timeLimit,
-            "backToForwardMode": self.backToForwardMode,
-            "postFlipCooldown": self.postFlipCooldown
-        }
+    backToForwardMode = models.BooleanField(default=False)
+    hardcoreMode = models.BooleanField(default=False)
 
