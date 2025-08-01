@@ -26,7 +26,7 @@
                     </ul>
                     <ul class="ms-auto navbar-nav dynamic-blue-text">
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link blue-nav-link" href="#">Settings</a></li>
+                            <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'settings' %}">Settings</a></li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'login' %}">Log In</a></li>
                             <li class="nav-item"><a class="nav-link blue-nav-link" href="{% url 'register' %}">Register</a></li>

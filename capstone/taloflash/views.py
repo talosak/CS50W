@@ -243,3 +243,9 @@ def set_view(request, set_id):
                 "flashset": flashset,
                 "flashcards": flashcards,
             })
+        
+def settings(request):
+    if request.method == "POST":
+        pass
+    else:
+        return render(request, "taloflash/settings.html")
