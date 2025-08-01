@@ -6,6 +6,18 @@
 
 {% block body %}
     <div class="container-lg">
-        <h1>Settings</h1>
+        <form method="post" action="{% url 'settings' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label" for="settingsThemeForm"><h3>Theme:</h3></label>
+                <div id="settingsThemeForm">
+                    <label class="form-label" for="settingsDarkThemeForm">Dark</label>
+                    <input type="radio" name="theme" autocomplete="off" id="settingsDarkTheme" {% if settings.theme == "dark" %}checked{% endif %}>
+                    <label class="ms-5 form-label" for="settingsLightThemeForm">Light</label>
+                    <input type="radio" name="theme" autocomplete="off" id="settingsLightTheme" {% if settings.theme == "light" %}checked{% endif %}>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-custom-blue">Save</button>
+        </form>
     </div>
 {% endblock %}

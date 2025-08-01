@@ -245,7 +245,10 @@ def set_view(request, set_id):
             })
         
 def settings(request):
+    settings = Settings.objects.get(pk=request.user.id)
     if request.method == "POST":
         pass
     else:
-        return render(request, "taloflash/settings.html")
+        return render(request, "taloflash/settings.html", {
+            "settings": settings,
+        })
