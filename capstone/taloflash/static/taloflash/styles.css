@@ -34,11 +34,8 @@ main {
     --alert-danger-highlight: #770000;
 }
 
-
-
 html, body {
     overflow-x: hidden;
-    width: 100%;
 }
 
 .dynamic-blue-text {
@@ -92,6 +89,12 @@ html, body {
 }
 
 .flashset {
+    border: 2px solid var(--dynamic-blue-muted);
+    background-color: var(--dynamic-blue-bg);
+    border-radius: 25px;
+}
+
+.flashcard {
     border: 2px solid var(--dynamic-blue-muted);
     background-color: var(--dynamic-blue-bg);
     border-radius: 25px;

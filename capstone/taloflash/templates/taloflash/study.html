@@ -1,0 +1,28 @@
+{% extends "taloflash/layout.html" %}
+{% load static %}
+
+{% block title %} Study {% endblock %}
+
+{% block script %}
+    <script defer src="{% static 'taloflash/study.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container-lg">
+        <div id="flashcardFront" class="flashcard" style="height:80vh">
+            <div class="row text-center mt-3 mb-4"><span style="font-size:{{user.settings.flashcardFontSize}}px;">How i wanna look :3</span></div>    
+            <div class="row justify-content-center mb-5"><img style="display:block; object-fit:contain; max-height:50vh; max-width:45vw;" src="https://pbs.twimg.com/media/EdaKj69WoAEiEoJ?format=jpg&name=medium"></div>
+            <div class="row justify-content-center mt-5">
+                <button type="button" class="col-4 btn btn-custom-blue" onclick="flip()">Show answer</button>
+            </div>
+        </div>
+        <div id="flashcardBack" class="flashcard d-none" style="height:80vh">
+            <div class="row text-center mt-3 mb-4"><span style="font-size:{{user.settings.flashcardFontSize}}px;">Hatsune Miku UwU</span></div>    
+            <div class="row justify-content-center"><img style="display:block; object-fit:contain; max-height:50vh; max-width:30vw;" src="https://preview.redd.it/give-me-all-your-mikus-v0-og52ued6i0he1.jpeg?width=1080&crop=smart&auto=webp&s=fb5383079957faa8b039eb6f571c6471395f1959"></div>
+            <div class="row justify-content-center mt-5">
+                <button type="button" class="col-2 me-2 btn btn-custom-blue">I knew</button>
+                <button type="button" class="col-2 ms-2 btn btn-custom-danger">I didn't know</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

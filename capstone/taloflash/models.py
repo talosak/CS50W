@@ -31,7 +31,7 @@ class Settings(models.Model):
     theme = models.CharField(default="dark", choices=[("dark", "Dark"), ("light", "Light")], max_length=63)
     flashSetDisplayOrder = models.CharField(default="likes", choices=[("likes", "Most liked"), ("name", "Name"), ("newest", "Newest"), ("creator", "Creator's name")], max_length=63)
     flashcardDisplayOrder = models.CharField(default="random", choices=[("random", "Random"), ("oldest", "Oldest"), ("alphabeticalFront", "Alphabetical - front side)"), ("alphabeticalBack", "Alphabetical - back side")], max_length=63)
-    flashcardFontSize = models.IntegerField(default=16)
+    flashcardFontSize = models.IntegerField(default=64)
     showTimer = models.BooleanField(default=False)
     timeLimit = models.IntegerField(default=0)
     timerBehavior = models.CharField(default="countDown", choices=[("countDown", "Count down"), ("countUp", "Count up")], max_length=63)

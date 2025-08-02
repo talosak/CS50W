@@ -276,4 +276,4 @@ def settings(request):
         })
 
 def study(request, set_id):
-    pass
+    return render(request, "taloflash/study.html")
