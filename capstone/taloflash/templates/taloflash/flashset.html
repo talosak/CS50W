@@ -12,28 +12,38 @@
 {% block body %}
     <div class="container-lg">
         <h2>{{flashset.name}}</h2>
-        {% if user in flashset.editors.all %}        
-           <a href="{% url 'createFlashcard' set_id=flashset.id %}" class="btn btn-custom-blue">Create Flashcard</a>
-        {% endif %}
-        {% if user == flashset.creator %}
-            <button type="button" class="btn btn-custom-danger" data-bs-toggle="modal" data-bs-target="#deleteFlashsetConfirmation">Delete Set</button>
-            <div class="modal fade" id="deleteFlashsetConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title" style="font-size:22px">Are you sure you would like to delete this set?</span>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <form method="post" action="{% url 'set' set_id=flashset.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger" id="deleteFlashsetConfirmationButton">Delete</button>
-                            </form>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                {% if flashcards|length > 0 %}
+                    <a href="{% url 'study' set_id=flashset.id %}" class="btn btn-custom-blue">Study</a>
+                {% endif %}
+            </div>
+            <div>
+                {% if user in flashset.editors.all %}        
+                    <a href="{% url 'createFlashcard' set_id=flashset.id %}" class="btn btn-custom-blue">Create Flashcard</a>
+                {% endif %}
+                {% if user == flashset.creator %}
+                    <button type="button" class="btn btn-custom-danger" data-bs-toggle="modal" data-bs-target="#deleteFlashsetConfirmation">Delete Set</button>
+                    <div class="modal fade" id="deleteFlashsetConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title" style="font-size:22px">Are you sure you would like to delete this set?</span>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="post" action="{% url 'set' set_id=flashset.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger" id="deleteFlashsetConfirmationButton">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
-        {% endif %}
+        </div>
+        
         {% for flashcard in flashcards %}
             <div style="color:currentColor; text-decoration:none;" class="container-fluid my-2 flashset" id="flashcard-{{flashcard.id}}">
                 <div class="row my-3">

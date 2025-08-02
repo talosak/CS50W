@@ -274,3 +274,6 @@ def settings(request):
         return render(request, "taloflash/settings.html", {
             "settings": settings,
         })
+
+def study(request, set_id):
+    pass

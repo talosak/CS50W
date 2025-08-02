@@ -16,4 +16,5 @@ urlpatterns = [
     path("search/<str:searchQuery>", views.searchResults, name="searchResults"),
     path("sets/<int:set_id>", views.set_view, name="set"),
     path("settings", views.settings, name="settings"),
+    path("sets/<int:set_id>/study", views.study, name="study"),
 ]
