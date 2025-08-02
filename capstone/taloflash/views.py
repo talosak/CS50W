@@ -247,7 +247,29 @@ def set_view(request, set_id):
 def settings(request):
     settings = Settings.objects.get(pk=request.user.id)
     if request.method == "POST":
-        pass
+        settings.theme = request.POST.get("theme", "dark")
+        settings.flashSetDisplayOrder = request.POST.get("flashSetDisplayOrder", "likes")
+        settings.flashcardDisplayOrder = request.POST.get("flashcardDisplayOrder", "random")
+        settings.flashcardFontSize = request.POST.get("flashcardFontSize", 16)
+        settings.showTimer = request.POST.get("showTimer", False)
+        settings.timeLimit = request.POST.get("timeLimit", 0)
+        settings.timerBehavior = request.POST.get("timerBehavior", "countDown")
+        settings.timeLimitBehavior = request.POST.get("timeLimitBehavior", "nothing")
+        settings.postFlipCooldown = request.POST.get("postFlipCooldown", 0)
+        settings.backToForwardMode = request.POST.get("backToForwardMode", False)
+        settings.hardcoreMode = request.POST.get("hardcoreMode", False)
+
+        # Checkboxes return "on" or nothing, but django needs it to be True or False
+        if settings.showTimer == "on":
+            settings.showTimer = True
+        if settings.backToForwardMode == "on":
+            settings.backToForwardMode = True
+        if settings.hardcoreMode == "on":
+            settings.hardcoreMode = True
+
+        settings.save()
+        messages.success(request, "Settings updated successfully")
+        return redirect("index")
     else:
         return render(request, "taloflash/settings.html", {
             "settings": settings,
