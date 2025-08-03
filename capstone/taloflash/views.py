@@ -276,4 +276,8 @@ def settings(request):
         })
 
 def study(request, set_id):
-    return render(request, "taloflash/study.html")
+    if request.method == "POST":
+        flashcards = Flashcard.objects.filter(flashSet__id=set_id).order_by("?")
+        return JsonResponse([flashcard.serialize() for flashcard in flashcards], safe=False)
+    else:
+        return render(request, "taloflash/study.html")

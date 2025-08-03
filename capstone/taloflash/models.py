@@ -26,6 +26,18 @@ class Flashcard(models.Model):
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="createdFlashcards")
     learners = models.ManyToManyField(User, related_name="learnedFlashcards")
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "flashset": self.flashSet.id,
+            "front": self.front,
+            "back": self.back,
+            "imageURL": self.imageURL,
+            "timestamp": self.timestamp,
+            "creator": self.creator.id,
+            "learners": [learner.id for learner in self.learners.all()]
+        }
+
 class Settings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="settings")
     theme = models.CharField(default="dark", choices=[("dark", "Dark"), ("light", "Light")], max_length=63)
