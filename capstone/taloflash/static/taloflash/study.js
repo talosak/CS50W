@@ -1,5 +1,7 @@
 // This has to be a global variable
 var flashcardIndex = 0;
+var flashcards = [];
+var remainingFlashcards = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     let pathnameArray = window.location.pathname.split("/");
@@ -13,11 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
         credentials: 'same-origin',
     })
     .then(response => response.json())
-    .then(flashcards => {
-        console.log(flashcards);
-        document.querySelector("#learnedButton").addEventListener('click', () => learned(flashcards));
-        document.querySelector("#notLearnedButton").addEventListener('click', () => notLearned(flashcards));
-        displayFlashcard(flashcards);
+    .then(responseFlashcards => {
+        flashcards = responseFlashcards.splice(0);
+        document.querySelector("#learnedButton").addEventListener('click', () => learned());
+        document.querySelector("#notLearnedButton").addEventListener('click', () => notLearned());
+        displayFlashcard();
     });
 });
 
@@ -35,7 +37,7 @@ function flip() {
 
 }
 
-function displayFlashcard(flashcards) {
+function displayFlashcard() {
     let flashcard = flashcards[flashcardIndex];
     let frontText = document.querySelector('#studyFlashcardFrontText');
     let backText = document.querySelector('#studyFlashcardBackText');
@@ -48,28 +50,55 @@ function displayFlashcard(flashcards) {
     backImageURL.src = flashcard.imageURL;
 }
 
-function learned(flashcards) {
-    // If current flashcard is the last one, do something
+function learned() {
+    // If current flashcard is the last one, shuffle and reset remaining flashcards
     if (flashcardIndex === flashcards.length - 1) {
-        console.log("No more flashcards");
-        // TODO
+        flashcards = remainingFlashcards.splice(0);
+        remainingFlashcards = [];
+        flashcardIndex = 0;
+        flip();
+        if (parseInt(flashcards.length) === 0) {
+            alert("All learned");
+            return
+        }
+        flashcards = shuffle(flashcards);
+        displayFlashcard();
         return
     }
 
     flashcardIndex += 1;
     flip();
-    displayFlashcard(flashcards);
+    displayFlashcard();
 }
 
-function notLearned(flashcards) {
-    // If current flashcard is the last one, do something
+function notLearned() {
+    // If current flashcard is the last one, shuffle and reset remaining flashcards
     if (flashcardIndex === flashcards.length - 1) {
-        console.log("No more flashcards");
-        // TODO
+        remainingFlashcards.push(flashcards[flashcardIndex]);
+        flashcards = remainingFlashcards.splice(0);
+        remainingFlashcards = [];
+        flashcardIndex = 0;
+        flip();
+        flashcards = shuffle(flashcards);
+        displayFlashcard();
         return
     }
 
+    remainingFlashcards.push(flashcards[flashcardIndex]);
     flashcardIndex += 1;
     flip();
-    displayFlashcard(flashcards);
+    displayFlashcard();
+}
+
+function shuffle(array) {
+    let shuffledArray = [];
+    while(true) {
+        let index = Math.floor(Math.random() * array.length);
+        if (!shuffledArray.includes(array[index])) {
+            shuffledArray.push(array[index]);
+        }
+        if (shuffledArray.length === array.length) {
+            return shuffledArray;
+        }
+    }
 }
