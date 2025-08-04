@@ -18,11 +18,9 @@ def index(request):
         elif request.user.settings.flashSetDisplayOrder == "newest":
             order = "-timestamp"
         elif request.user.settings.flashSetDisplayOrder == "creator":
-            order = "-creator__name"
-        else:
-            order = "-timestamp"
+            order = "-creator__username"
     except AttributeError:
-        order = "-timestamp"
+        order = "-likeCount"
 
     flashsets = FlashSet.objects.annotate(likeCount=Count("likers", distinct=True), flashcardCount=Count("flashcards", distinct=True)).order_by(order).all()
     return render(request, "taloflash/index.html", {
@@ -201,7 +199,7 @@ def saved(request):
     elif request.user.settings.flashSetDisplayOrder == "newest":
         order = "-timestamp"
     elif request.user.settings.flashSetDisplayOrder == "creator":
-        order = "-creator__name"
+        order = "-creator__username"
     else:
         messages.success(request, "Not logged in")
         return redirect("index")
@@ -237,8 +235,19 @@ def set_view(request, set_id):
             messages.success(request, "Set deleted successfully")
             return redirect("index")
         else:
+            try:
+                if request.user.settings.flashcardDisplayOrder == "random":
+                    order = "?"
+                elif request.user.settings.flashcardDisplayOrder == "oldest":
+                    order = "timestamp"
+                elif request.user.settings.flashcardDisplayOrder == "alphabeticalFront":
+                    order = "front"
+                elif request.user.settings.flashcardDisplayOrder == "alphabeticalBack":
+                    order = "back"
+            except AttributeError:
+                order = "?"
             flashset = FlashSet.objects.annotate(likeCount=Count("likers"), flashcardCount=Count("flashcards")).get(pk=set_id)
-            flashcards = Flashcard.objects.filter(flashSet=flashset).all()
+            flashcards = Flashcard.objects.filter(flashSet=flashset).order_by(order).all()
             return render(request, "taloflash/flashset.html", {
                 "flashset": flashset,
                 "flashcards": flashcards,

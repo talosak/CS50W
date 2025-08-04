@@ -26,7 +26,7 @@
                         <option value="likes"{% if settings.flashSetDisplayOrder == "likes" %} selected{% endif %}>Most liked</option>
                         <option value="name"{% if settings.flashSetDisplayOrder == "name" %} selected{% endif %}>Name</option>
                         <option value="newest"{% if settings.flashSetDisplayOrder == "newest" %} selected{% endif %}>Newest</option>
-                        <option value="creator"{% if settings.flashSetDisplayOrder == "creator" %} selected{% endif %}>Creator's name</option>
+                        <option value="creator"{% if settings.flashSetDisplayOrder == "creator" %} selected{% endif %}>Creator's username</option>
                     </select>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="mb-5" id="settingsFlashcardFontSizeForm">
-                <h3>Flashcard font size:</h3>
+                <h3>Flashcard font size (in pixels):</h3>
                 <div>
                     <input type="number" value="{{settings.flashcardFontSize}}" name="flashcardFontSize" min="0" class="form-control input-blue">
                 </div>
