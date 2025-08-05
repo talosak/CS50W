@@ -258,11 +258,10 @@ def settings(request):
     if request.method == "POST":
         settings.theme = request.POST.get("theme", "dark")
         settings.flashSetDisplayOrder = request.POST.get("flashSetDisplayOrder", "likes")
-        settings.flashcardDisplayOrder = request.POST.get("flashcardDisplayOrder", "random")
-        settings.flashcardFontSize = request.POST.get("flashcardFontSize", 16)
+        settings.flashcardDisplayOrder = request.POST.get("flashcardDisplayOrder", "oldest")
+        settings.flashcardFontSize = request.POST.get("flashcardFontSize", 40)
         settings.showTimer = request.POST.get("showTimer", False)
         settings.timeLimit = request.POST.get("timeLimit", 0)
-        settings.timerBehavior = request.POST.get("timerBehavior", "countDown")
         settings.timeLimitBehavior = request.POST.get("timeLimitBehavior", "nothing")
         settings.postFlipCooldown = request.POST.get("postFlipCooldown", 0)
         settings.backToForwardMode = request.POST.get("backToForwardMode", False)

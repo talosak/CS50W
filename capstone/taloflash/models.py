@@ -46,9 +46,23 @@ class Settings(models.Model):
     flashcardFontSize = models.IntegerField(default=40)
     showTimer = models.BooleanField(default=False)
     timeLimit = models.IntegerField(default=0)
-    timerBehavior = models.CharField(default="countDown", choices=[("countDown", "Count down"), ("countUp", "Count up")], max_length=63)
-    timeLimitBehavior = models.CharField(default="nothing", choices=[("nothing", "Nothing"), ("show", "Show"), ("kick", "Kick"), ("restart", "Restart")], max_length=63)
+    timeLimitBehavior = models.CharField(default="nothing", choices=[("nothing", "Nothing"), ("kick", "Kick"), ("restart", "Restart")], max_length=63)
     postFlipCooldown = models.FloatField(default=0)
     backToForwardMode = models.BooleanField(default=False)
     hardcoreMode = models.BooleanField(default=False)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user": self.user.id,
+            "theme": self.theme,
+            "flashSetDisplayOrder": self.flashSetDisplayOrder,
+            "flashcardDisplayOrder": self.flashcardDisplayOrder,
+            "flashcardFontSize": self.flashcardFontSize,
+            "showTimer": self.showTimer,
+            "timeLimit": self.timeLimit,
+            "timeLimitBehavior": self.timeLimitBehavior,
+            "postFlipCooldown": self.postFlipCooldown,
+            "backToForwardMode": self.backToForwardMode,
+            "hardcoreMode": self.hardcoreMode,
+        }
