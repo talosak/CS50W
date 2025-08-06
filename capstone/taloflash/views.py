@@ -4,6 +4,8 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.db.models import Count
 from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
 import json
 
 from .models import User, FlashSet, Flashcard, Settings
@@ -234,6 +236,32 @@ def set_view(request, set_id):
             flashset.delete()
             messages.success(request, "Set deleted successfully")
             return redirect("index")
+        elif request.method == "PUT":
+            # Add editor
+            data = json.loads(request.body)
+            flashset = FlashSet.objects.get(pk=set_id)
+            username = data.get("username", "")
+
+            try:
+                editor = User.objects.get(username=username)
+            except User.DoesNotExist:
+                messages.error(request, "User does not exist")
+                return JsonResponse({"error": "User does not exist"}, status=404)
+            if editor in flashset.editors.all():
+                messages.error(request, "User is already an editor")
+                return JsonResponse({"error": "User is already an editor"}, status=500)
+            
+            flashset.editors.add(editor)
+            flashset.save()
+            return JsonResponse({"editor_id": editor.id}, status=201)
+        elif request.method == "DELETE":
+            # Remove user from editors
+            data = json.loads(request.body)
+            flashset = FlashSet.objects.get(pk=set_id)
+            editor_id = data.get("editor_id", "")
+            editor = User.objects.get(pk=editor_id)
+            flashset.editors.remove(editor)
+            return JsonResponse({"message": "User removed successfully"}, status=201)
         else:
             try:
                 if request.user.settings.flashcardDisplayOrder == "random":

@@ -111,3 +111,7 @@ html, body {
     color: var(--alert-danger-highlight);
     background-color: var(--alert-danger-border-color);
 }
+
+.fontSize-22px {
+    font-size: 22px;
+}

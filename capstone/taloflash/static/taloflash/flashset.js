@@ -7,7 +7,7 @@ function deleteFlashcard(flashcard_id, set_id) {
         credentials: 'same-origin',
     });
 
-    flashcard = document.querySelector(`#flashcard-${flashcard_id}`);
+    let flashcard = document.querySelector(`#flashcard-${flashcard_id}`);
     flashcard.innerHTML = '';
     flashcard.classList = '';
 }
@@ -52,4 +52,64 @@ function saveFlashcardEdit(flashcard_id, set_id) {
             newImageURL: newFlashcardImageURL.value,
         }),
     });
+}
+
+function addEditor(set_id) {
+    let username = document.querySelector("#addEditorInput").value;
+
+    fetch(`/sets/${set_id}`, {
+        method: "PUT",
+        headers: {
+            'X-CSRFToken': Cookies.get('csrftoken'),
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            username: username,
+        }),
+    })
+    .then(response => response.json())
+    .then(editor_id => {
+        if (!editor_id["editor_id"]) {
+            window.location.reload();
+            return
+        }
+        // Render the newly added editor
+        editor_id = editor_id["editor_id"];
+        let div = document.createElement('div');
+        div.id = `editorList-${editor_id}`;
+        div.classList.add("flashcard", "container-fluid", "mt-2");
+        let div2 = document.createElement('div');
+        div2.classList.add("row", "justify-content-between");
+        let span = document.createElement('span');
+        span.classList.add("w-auto", "mt-2", "fontSize-22px");
+        span.innerHTML = username;
+        div2.append(span);
+        let button = document.createElement('button');
+        button.type = "button";
+        button.classList.add("w-auto", "py-0", "my-2", "me-2", "btn", "btn-custom-danger", "fontSize-22px");
+        button.innerHTML = "Remove";
+        button.onclick = function() {deleteEditor(set_id, editor_id)};
+        div2.append(button);
+        div.append(div2);
+        document.querySelector("#editorList").append(div);
+    });
+}
+
+function deleteEditor(set_id, editor_id) {
+    fetch(`/sets/${set_id}`, {
+        method: "DELETE",
+        headers: {
+            'X-CSRFToken': Cookies.get('csrftoken'),
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            editor_id: editor_id,
+        }),
+    });
+
+    document.querySelector(`#editorList-${editor_id}`).innerHTML = '';
+    document.querySelector(`#editorList-${editor_id}`).classList = '';
+    document.querySelector(`#editorList-${editor_id}`).remove();
 }

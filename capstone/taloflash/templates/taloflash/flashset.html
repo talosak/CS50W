@@ -23,6 +23,44 @@
                     <a href="{% url 'createFlashcard' set_id=flashset.id %}" class="btn btn-custom-blue">Create Flashcard</a>
                 {% endif %}
                 {% if user == flashset.creator %}
+                    <button type="button" class="btn btn-custom-blue" data-bs-toggle="modal" data-bs-target="#manageEditorsModal">Manage editors</button>
+                    <div class="modal fade" id="manageEditorsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="modal-title" style="font-size:26px">Manage editors</span>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row justify-content-center">
+                                        <input type="text" style="width:65%" class="form-control input-blue me-2" id="addEditorInput">
+                                        <button type="button" style="font-size:22px;" class="btn btn-custom-blue w-auto" id="addEditorButton" onclick="addEditor({{flashset.id}})">Add editor</button>
+                                    </div>
+                                    <div id="editorList">
+                                        {% for editor in flashset.editors.all %}
+                                            {% if editor == flashset.creator %}
+                                                <div class="flashcard container-fluid mt-2" id="editorList-{{editor.id}}">
+                                                    <div class="row justify-content-between">
+                                                        <span class="w-auto mt-2" style="font-size:22px;">{{editor.username}}</span>
+                                                        <button type="button" style="font-size:22px;" class="w-auto py-0 my-2 me-2 btn btn-custom-danger" disabled>Remove</button>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <div class="flashcard container-fluid mt-2" id="editorList-{{editor.id}}">
+                                                    <div class="row justify-content-between">
+                                                        <span class="w-auto mt-2" style="font-size:22px;">{{editor.username}}</span>
+                                                        <button type="button" style="font-size:22px;" class="w-auto py-0 my-2 me-2 btn btn-custom-danger" onclick="deleteEditor({{flashset.id}}, {{editor.id}})">Remove</button>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-custom-blue" data-bs-dismiss="modal">Back</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-custom-danger" data-bs-toggle="modal" data-bs-target="#deleteFlashsetConfirmation">Delete Set</button>
                     <div class="modal fade" id="deleteFlashsetConfirmation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -34,6 +72,7 @@
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                     <form method="post" action="{% url 'set' set_id=flashset.id %}">
                                         {% csrf_token %}
+                                        <input type="hidden" value="deleteFlashset" name="action">
                                         <button type="submit" class="btn btn-danger" id="deleteFlashsetConfirmationButton">Delete</button>
                                     </form>
                                 </div>
